@@ -1,7 +1,6 @@
 Attribute VB_Name = "Module1"
 Option Explicit
 
-Public Const ADMIN_PWD As String = "mina2040"
 Public TempOpenedCustomerSheet As String
 Public TempOpenedSummarySheet As String
 Public AdminMode As Boolean
@@ -10,7 +9,7 @@ Public IsAddingCustomerFromMenu As Boolean
 
 
 '========================
-' ÃÏæÇÊ ãÓÇÚÏÉ
+' Ø£Ø¯ÙˆØ§Øª Ù…Ø³Ø§Ø¹Ø¯Ø©
 '========================
 Public Function SafeSheetName(ByVal s As String) As String
     Dim badChars As Variant, i As Long
@@ -31,7 +30,7 @@ Public Function SheetExists(ByVal shName As String) As Boolean
     On Error GoTo 0
 End Function
 
-'åá ÇáÚãíá ãæÌæÏ İí ŞÇÆãÉ_ÚãáÇÁ¿ (ÈÍË ÚãæÏ A)
+'Ù‡Ù„ Ø§Ù„Ø¹Ù…ÙŠÙ„ Ù…ÙˆØ¬ÙˆØ¯ ÙÙŠ Ù‚Ø§Ø¦Ù…Ø©_Ø¹Ù…Ù„Ø§Ø¡ØŸ (Ø¨Ø­Ø« Ø¹Ù…ÙˆØ¯ A)
 Public Function CustomerExistsInList(ByVal customerName As String) As Boolean
     Dim ws As Worksheet, lastRow As Long, i As Long
     Dim v As String
@@ -42,7 +41,7 @@ Public Function CustomerExistsInList(ByVal customerName As String) As Boolean
         Exit Function
     End If
 
-    Set ws = ThisWorkbook.Worksheets("ŞÇÆãÉ_ÚãáÇÁ")
+    Set ws = ThisWorkbook.Worksheets(SHEET_CUSTOMERS)
     lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
 
     For i = 2 To lastRow
@@ -57,10 +56,10 @@ Public Function CustomerExistsInList(ByVal customerName As String) As Boolean
 End Function
 
 '========================
-' ÅäÔÇÁ ÔíÊ Úãíá ãä ÇáŞÇáÈ (ãÎİí VeryHidden)
-' - áÇ íİÊÍ ÇáÔíÊ ÈÚÏ ÇáÅäÔÇÁ
-' - íãäÚ ÊÑß _ŞÇáÈ_Úãíá (2) ÚäÏ İÔá ÇáÊÓãíÉ
-' - íÊÚÇãá ãÚ ÇáŞİá Structure ÈÔßá ãÄßÏ
+' Ø¥Ù†Ø´Ø§Ø¡ Ø´ÙŠØª Ø¹Ù…ÙŠÙ„ Ù…Ù† Ø§Ù„Ù‚Ø§Ù„Ø¨ (Ù…Ø®ÙÙŠ VeryHidden)
+' - Ù„Ø§ ÙŠÙØªØ­ Ø§Ù„Ø´ÙŠØª Ø¨Ø¹Ø¯ Ø§Ù„Ø¥Ù†Ø´Ø§Ø¡
+' - ÙŠÙ…Ù†Ø¹ ØªØ±Ùƒ _Ù‚Ø§Ù„Ø¨_Ø¹Ù…ÙŠÙ„ (2) Ø¹Ù†Ø¯ ÙØ´Ù„ Ø§Ù„ØªØ³Ù…ÙŠØ©
+' - ÙŠØªØ¹Ø§Ù…Ù„ Ù…Ø¹ Ø§Ù„Ù‚ÙÙ„ Structure Ø¨Ø´ÙƒÙ„ Ù…Ø¤ÙƒØ¯
 '========================
 Public Sub CreateCustomerSheet(ByVal SheetName As String)
 
@@ -77,27 +76,25 @@ Public Sub CreateCustomerSheet(ByVal SheetName As String)
 
     Set wsBack = ActiveSheet
 
-    'ÊÃßÏ ãä æÌæÏ ÇáŞÇáÈ
+    'ØªØ£ÙƒØ¯ Ù…Ù† ÙˆØ¬ÙˆØ¯ Ø§Ù„Ù‚Ø§Ù„Ø¨
     Set wsTemplate = Nothing
     On Error Resume Next
-    Set wsTemplate = ThisWorkbook.Worksheets("_ŞÇáÈ_Úãíá")
+    Set wsTemplate = ThisWorkbook.Worksheets(SHEET_TEMPLATE)
     On Error GoTo 0
     If wsTemplate Is Nothing Then
-        MsgBox "ÔíÊ ÇáŞÇáÈ ÛíÑ ãæÌæÏ: _ŞÇáÈ_Úãíá", vbCritical
+        MsgBox "Ø´ÙŠØª Ø§Ù„Ù‚Ø§Ù„Ø¨ ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯: _Ù‚Ø§Ù„Ø¨_Ø¹Ù…ÙŠÙ„", vbCritical
         Exit Sub
     End If
 
-    'åá Structure ãŞİæáÉ¿
-    wasProtected = ThisWorkbook.ProtectStructure
+    'Ù‡Ù„ Structure Ù…Ù‚ÙÙˆÙ„Ø©ØŸ
+    wasProtected = TryUnprotectWorkbook()
 
-    'İß Structure ãÄŞÊğÇ æÈÜÊÃßíÏ
+    'ÙÙƒ Structure Ù…Ø¤Ù‚ØªÙ‹Ø§ ÙˆØ¨Ù€ØªØ£ÙƒÙŠØ¯
     If wasProtected Then
-        ThisWorkbook.Unprotect Password:=ADMIN_PWD
-
         If ThisWorkbook.ProtectStructure Then
-            MsgBox "áÇ íãßä ÅäÔÇÁ ÔíÊ ÇáÚãíá áÃä ÈäíÉ ÇáãÕäİ ãÇ ÒÇáÊ ãÍãíÉ." & vbCrLf & _
-                   "ÇÖÛØ (İÊÍ Çáãáİ) ÃæáÇğ Ëã ÃÚÏ ÇáãÍÇæáÉ.", vbCritical
-            Exit Sub
+            MsgBox "Ù„Ø§ ÙŠÙ…ÙƒÙ† Ø¥Ù†Ø´Ø§Ø¡ Ø´ÙŠØª Ø§Ù„Ø¹Ù…ÙŠÙ„ Ù„Ø£Ù† Ø¨Ù†ÙŠØ© Ø§Ù„Ù…ØµÙ†Ù Ù…Ø§ Ø²Ø§Ù„Øª Ù…Ø­Ù…ÙŠØ©." & vbCrLf & _
+                   "Ø§Ø¶ØºØ· (ÙØªØ­ Ø§Ù„Ù…Ù„Ù) Ø£ÙˆÙ„Ø§Ù‹ Ø«Ù… Ø£Ø¹Ø¯ Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø©.", vbCritical
+            GoTo CleanExit
         End If
     End If
 
@@ -106,7 +103,7 @@ Public Sub CreateCustomerSheet(ByVal SheetName As String)
 
     lastIndex = ThisWorkbook.Sheets.Count
 
-    'äÓÎ ÇáŞÇáÈ
+    'Ù†Ø³Ø® Ø§Ù„Ù‚Ø§Ù„Ø¨
     wsTemplate.Copy After:=ThisWorkbook.Sheets(lastIndex)
 
     Set wsNew = ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)
@@ -116,16 +113,12 @@ Public Sub CreateCustomerSheet(ByVal SheetName As String)
     wsNew.Visible = xlSheetVeryHidden
 
 CleanExit:
-    'ÇÑÌÚ ßãÇ ßäÊ
+    'Ø§Ø±Ø¬Ø¹ ÙƒÙ…Ø§ ÙƒÙ†Øª
     On Error Resume Next
     wsBack.Activate
     On Error GoTo 0
 
-    If wasProtected Then
-        On Error Resume Next
-        ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
-        On Error GoTo 0
-    End If
+    RestoreProtectWorkbook wasProtected
 
     Application.DisplayAlerts = True
     Application.ScreenUpdating = True
@@ -136,98 +129,98 @@ RenameFailed:
     wsNew.Delete
     On Error GoTo 0
 
-    MsgBox "İÔá ÅäÔÇÁ ÔíÊ ÇáÚãíá ÈÓÈÈ ãÔßáÉ İí ÇáÇÓã.", vbCritical
+    MsgBox "ÙØ´Ù„ Ø¥Ù†Ø´Ø§Ø¡ Ø´ÙŠØª Ø§Ù„Ø¹Ù…ÙŠÙ„ Ø¨Ø³Ø¨Ø¨ Ù…Ø´ÙƒÙ„Ø© ÙÙŠ Ø§Ù„Ø§Ø³Ù….", vbCritical
     Resume CleanExit
 End Sub
 
 
 '========================
-' İÍÕ ÇáİÇÊæÑÉ ŞÈá ÇáÍİÙ (ÍÓÈ ÇÊİÇŞäÇ ÇáäåÇÆí)
-' - áÇ íäÔÆ Úãíá/ÔíÊ
-' - íÊÃßÏ ãä: ÇáÚãíá ãæÌæÏ ÈÇáŞÇÆãÉ + ÇáÊÇÑíÎ ãæÌæÏ + ÇáÔíÊ ãæÌæÏ
+' ÙØ­Øµ Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ù‚Ø¨Ù„ Ø§Ù„Ø­ÙØ¸ (Ø­Ø³Ø¨ Ø§ØªÙØ§Ù‚Ù†Ø§ Ø§Ù„Ù†Ù‡Ø§Ø¦ÙŠ)
+' - Ù„Ø§ ÙŠÙ†Ø´Ø¦ Ø¹Ù…ÙŠÙ„/Ø´ÙŠØª
+' - ÙŠØªØ£ÙƒØ¯ Ù…Ù†: Ø§Ù„Ø¹Ù…ÙŠÙ„ Ù…ÙˆØ¬ÙˆØ¯ Ø¨Ø§Ù„Ù‚Ø§Ø¦Ù…Ø© + Ø§Ù„ØªØ§Ø±ÙŠØ® Ù…ÙˆØ¬ÙˆØ¯ + Ø§Ù„Ø´ÙŠØª Ù…ÙˆØ¬ÙˆØ¯
 '========================
 Public Function ValidateInvoiceForSave() As Boolean
     Dim ws As Worksheet, r As Long
     Dim customer As String, invDate As Variant
     Dim targetSheetName As String
 
-    Set ws = ThisWorkbook.Worksheets("ÅÏÎÇá_İÇÊæÑÉ")
+    Set ws = ThisWorkbook.Worksheets(SHEET_INVOICE)
 
-    customer = Trim(CStr(ws.Range("B2").Value))
-    invDate = ws.Range("I2").Value
+    customer = Trim(CStr(ws.Range(CELL_INVOICE_CUSTOMER).Value))
+    invDate = ws.Range(CELL_INVOICE_DATE).Value
 
-    '1) ÇáÚãíá
+    '1) Ø§Ù„Ø¹Ù…ÙŠÙ„
     If customer = "" Then
-        MsgBox "ÇÎÊÑ/ÇßÊÈ ÇÓã ÇáÚãíá ÃæáÇğ.", vbExclamation
+        MsgBox "Ø§Ø®ØªØ±/Ø§ÙƒØªØ¨ Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„ Ø£ÙˆÙ„Ø§Ù‹.", vbExclamation
         ValidateInvoiceForSave = False
         Exit Function
     End If
 
-    '2) ÇáÚãíá ãæÌæÏ İí ŞÇÆãÉ ÇáÚãáÇÁ¿
+    '2) Ø§Ù„Ø¹Ù…ÙŠÙ„ Ù…ÙˆØ¬ÙˆØ¯ ÙÙŠ Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡ØŸ
     If CustomerExistsInList(customer) = False Then
-        MsgBox "åĞÇ ÇáÚãíá ÛíÑ ãæÌæÏ İí ŞÇÆãÉ ÇáÚãáÇÁ." & vbCrLf & _
-               "ãä İÖáß ÃÖİ ÇáÚãíá ÃæáÇğ Ëã Şã ÈÇáÍİÙ.", vbExclamation
+        MsgBox "Ù‡Ø°Ø§ Ø§Ù„Ø¹Ù…ÙŠÙ„ ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯ ÙÙŠ Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡." & vbCrLf & _
+               "Ù…Ù† ÙØ¶Ù„Ùƒ Ø£Ø¶Ù Ø§Ù„Ø¹Ù…ÙŠÙ„ Ø£ÙˆÙ„Ø§Ù‹ Ø«Ù… Ù‚Ù… Ø¨Ø§Ù„Ø­ÙØ¸.", vbExclamation
         ValidateInvoiceForSave = False
         Exit Function
     End If
 
-    '3) ÇáÊÇÑíÎ I2
+    '3) Ø§Ù„ØªØ§Ø±ÙŠØ® I2
     If IsEmpty(invDate) Or Trim(CStr(invDate)) = "" Then
-        MsgBox "ÃÏÎá ÊÇÑíÎ ÇáİÇÊæÑÉ İí ÇáÎáíÉ I2.", vbExclamation
+        MsgBox "Ø£Ø¯Ø®Ù„ ØªØ§Ø±ÙŠØ® Ø§Ù„ÙØ§ØªÙˆØ±Ø© ÙÙŠ Ø§Ù„Ø®Ù„ÙŠØ© I2.", vbExclamation
         ValidateInvoiceForSave = False
         Exit Function
     End If
 
     If Not IsDate(invDate) Then
-        MsgBox "ÊÇÑíÎ ÇáİÇÊæÑÉ ÛíÑ ÕÍíÍ. ÃÏÎá ÊÇÑíÎ ÕÍíÍ İí I2.", vbExclamation
+        MsgBox "ØªØ§Ø±ÙŠØ® Ø§Ù„ÙØ§ØªÙˆØ±Ø© ØºÙŠØ± ØµØ­ÙŠØ­. Ø£Ø¯Ø®Ù„ ØªØ§Ø±ÙŠØ® ØµØ­ÙŠØ­ ÙÙŠ I2.", vbExclamation
         ValidateInvoiceForSave = False
         Exit Function
     End If
 
-    '4) ÑŞã ÇáİÇÊæÑÉ F2
-    If Trim(CStr(ws.Range("F2").Value)) = "" Then
-        MsgBox "ÇÏÎá ÑŞã ÇáİÇÊæÑÉ.", vbExclamation
+    '4) Ø±Ù‚Ù… Ø§Ù„ÙØ§ØªÙˆØ±Ø© F2
+    If Trim(CStr(ws.Range(CELL_INVOICE_NUMBER).Value)) = "" Then
+        MsgBox "Ø§Ø¯Ø®Ù„ Ø±Ù‚Ù… Ø§Ù„ÙØ§ØªÙˆØ±Ø©.", vbExclamation
         ValidateInvoiceForSave = False
         Exit Function
     End If
 
-    '5) İÍÕ ÈäæÏ ÇáİÇÊæÑÉ (ßãÇ ßÇä ÚäÏß)
+    '5) ÙØ­Øµ Ø¨Ù†ÙˆØ¯ Ø§Ù„ÙØ§ØªÙˆØ±Ø© (ÙƒÙ…Ø§ ÙƒØ§Ù† Ø¹Ù†Ø¯Ùƒ)
     For r = 7 To 31
         If Trim(CStr(ws.Cells(r, "C").Value)) <> "" Then
 
             If Trim(CStr(ws.Cells(r, "F").Value)) = "" Then
-                MsgBox "ÇÎÊÑ ÇáæÍÏÉ (ÚÏÏ/ŞíÇÓ) (ÇáÓØÑ " & r & ")", vbExclamation
+                MsgBox "Ø§Ø®ØªØ± Ø§Ù„ÙˆØ­Ø¯Ø© (Ø¹Ø¯Ø¯/Ù‚ÙŠØ§Ø³) (Ø§Ù„Ø³Ø·Ø± " & r & ")", vbExclamation
                 ValidateInvoiceForSave = False
                 Exit Function
             End If
 
             If Val(ws.Cells(r, "G").Value) <= 0 Then
-                MsgBox "ÇÏÎá ÚÏÏ ÕÍíÍ ÃßÈÑ ãä ÕİÑ (ÇáÓØÑ " & r & ")", vbExclamation
+                MsgBox "Ø§Ø¯Ø®Ù„ Ø¹Ø¯Ø¯ ØµØ­ÙŠØ­ Ø£ÙƒØ¨Ø± Ù…Ù† ØµÙØ± (Ø§Ù„Ø³Ø·Ø± " & r & ")", vbExclamation
                 ValidateInvoiceForSave = False
                 Exit Function
             End If
 
-            If ws.Cells(r, "F").Value = "ŞíÇÓ" Then
+            If ws.Cells(r, "F").Value = "Ù‚ÙŠØ§Ø³" Then
                 If Val(ws.Cells(r, "D").Value) <= 0 Or Val(ws.Cells(r, "E").Value) <= 0 Then
-                    MsgBox "İí ÍÇáÉ (ŞíÇÓ) íÌÈ ÅÏÎÇá ÇáÚÑÖ æÇáÇÑÊİÇÚ (ÇáÓØÑ " & r & ")", vbExclamation
+                    MsgBox "ÙÙŠ Ø­Ø§Ù„Ø© (Ù‚ÙŠØ§Ø³) ÙŠØ¬Ø¨ Ø¥Ø¯Ø®Ø§Ù„ Ø§Ù„Ø¹Ø±Ø¶ ÙˆØ§Ù„Ø§Ø±ØªÙØ§Ø¹ (Ø§Ù„Ø³Ø·Ø± " & r & ")", vbExclamation
                     ValidateInvoiceForSave = False
                     Exit Function
                 End If
             End If
 
             If Val(ws.Cells(r, "I").Value) <= 0 Then
-                MsgBox "ÇáÓÚÑ áÇÒã íßæä ÃßÈÑ ãä ÕİÑ (ÇáÓØÑ " & r & ")", vbExclamation
+                MsgBox "Ø§Ù„Ø³Ø¹Ø± Ù„Ø§Ø²Ù… ÙŠÙƒÙˆÙ† Ø£ÙƒØ¨Ø± Ù…Ù† ØµÙØ± (Ø§Ù„Ø³Ø·Ø± " & r & ")", vbExclamation
                 ValidateInvoiceForSave = False
                 Exit Function
             End If
         End If
     Next r
 
-    '6) ÔíÊ ÇáÚãíá áÇÒã íßæä ãæÌæÏ (áÃääÇ áä ääÔÆå ÚäÏ ÇáÍİÙ)
+    '6) Ø´ÙŠØª Ø§Ù„Ø¹Ù…ÙŠÙ„ Ù„Ø§Ø²Ù… ÙŠÙƒÙˆÙ† Ù…ÙˆØ¬ÙˆØ¯ (Ù„Ø£Ù†Ù†Ø§ Ù„Ù† Ù†Ù†Ø´Ø¦Ù‡ Ø¹Ù†Ø¯ Ø§Ù„Ø­ÙØ¸)
     targetSheetName = SafeSheetName(customer)
     If SheetExists(targetSheetName) = False Then
-        MsgBox "ÔíÊ ÇáÚãíá ÛíÑ ãæÌæÏ ÈÚÏ." & vbCrLf & _
-               "ãä İÖáß ÃÖİ ÇáÚãíá (áíÊã ÅäÔÇÁ ÔíÊ ÇáÚãíá) Ëã ÃÚÏ ÇáÍİÙ.", vbExclamation
+        MsgBox "Ø´ÙŠØª Ø§Ù„Ø¹Ù…ÙŠÙ„ ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯ Ø¨Ø¹Ø¯." & vbCrLf & _
+               "Ù…Ù† ÙØ¶Ù„Ùƒ Ø£Ø¶Ù Ø§Ù„Ø¹Ù…ÙŠÙ„ (Ù„ÙŠØªÙ… Ø¥Ù†Ø´Ø§Ø¡ Ø´ÙŠØª Ø§Ù„Ø¹Ù…ÙŠÙ„) Ø«Ù… Ø£Ø¹Ø¯ Ø§Ù„Ø­ÙØ¸.", vbExclamation
         ValidateInvoiceForSave = False
         Exit Function
     End If
@@ -236,9 +229,9 @@ Public Function ValidateInvoiceForSave() As Boolean
 End Function
 
 '========================
-' ÍİÙ/ÊÑÍíá ÇáİÇÊæÑÉ Åáì ÔíÊ ÇáÚãíá
-' - áÇ íäÔÆ Úãíá/ÔíÊ
-' - íÑÍøá İŞØ ÈÚÏ ÇáÊÍŞŞ
+' Ø­ÙØ¸/ØªØ±Ø­ÙŠÙ„ Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ø¥Ù„Ù‰ Ø´ÙŠØª Ø§Ù„Ø¹Ù…ÙŠÙ„
+' - Ù„Ø§ ÙŠÙ†Ø´Ø¦ Ø¹Ù…ÙŠÙ„/Ø´ÙŠØª
+' - ÙŠØ±Ø­Ù‘Ù„ ÙÙ‚Ø· Ø¨Ø¹Ø¯ Ø§Ù„ØªØ­Ù‚Ù‚
 '========================
 Public Sub AddInvoice()
 
@@ -248,24 +241,24 @@ Public Sub AddInvoice()
     Dim r As Long, lastTarget As Long
     Dim targetSheetName As String
     Dim oldVis As XlSheetVisibility
+    Dim wasProtected As Boolean
 
     If ValidateInvoiceForSave = False Then Exit Sub
+    On Error GoTo CleanExit
 
-    Set wsI = ThisWorkbook.Worksheets("ÅÏÎÇá_İÇÊæÑÉ")
+    Set wsI = ThisWorkbook.Worksheets(SHEET_INVOICE)
 
-    customer = Trim(CStr(wsI.Range("B2").Value))
-    invNo = Trim(CStr(wsI.Range("F2").Value))
-    invDate = CDate(wsI.Range("I2").Value)
+    customer = Trim(CStr(wsI.Range(CELL_INVOICE_CUSTOMER).Value))
+    invNo = Trim(CStr(wsI.Range(CELL_INVOICE_NUMBER).Value))
+    invDate = CDate(wsI.Range(CELL_INVOICE_DATE).Value)
 
     targetSheetName = SafeSheetName(customer)
     Set wsTarget = ThisWorkbook.Worksheets(targetSheetName)
 
-    'İß Şİá ÈäíÉ ÇáãÕäİ ãÄŞÊğÇ
-    On Error Resume Next
-    ThisWorkbook.Unprotect Password:=ADMIN_PWD
-    On Error GoTo 0
+    'ÙÙƒ Ù‚ÙÙ„ Ø¨Ù†ÙŠØ© Ø§Ù„Ù…ØµÙ†Ù Ù…Ø¤Ù‚ØªÙ‹Ø§
+    wasProtected = TryUnprotectWorkbook()
 
-    'ÇİÊÍ ÇáÔíÊ ãÄŞÊğÇ ááÊÑÍíá Ëã ÇÑÌÚå ßãÇ ßÇä
+    'Ø§ÙØªØ­ Ø§Ù„Ø´ÙŠØª Ù…Ø¤Ù‚ØªÙ‹Ø§ Ù„Ù„ØªØ±Ø­ÙŠÙ„ Ø«Ù… Ø§Ø±Ø¬Ø¹Ù‡ ÙƒÙ…Ø§ ÙƒØ§Ù†
     oldVis = wsTarget.Visible
     wsTarget.Visible = xlSheetVisible
 
@@ -288,54 +281,55 @@ Public Sub AddInvoice()
 
     wsTarget.Visible = oldVis
 
-    'ÅÚÇÏÉ ÇáŞİá
-    On Error Resume Next
-    ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
-    On Error GoTo 0
+    'ØªÙØ±ÙŠØº Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ø¨Ø¯ÙˆÙ† Ù…Ø³Ø­ Ø§Ù„Ù…Ø¹Ø§Ø¯Ù„Ø§Øª
+    wsI.Range(CELL_INVOICE_NUMBER).ClearContents
+    wsI.Range(CELL_INVOICE_DATE).ClearContents
+    wsI.Range(RANGE_INVOICE_HEADER).ClearContents
 
-    'ÊİÑíÛ ÈíÇäÇÊ ÇáİÇÊæÑÉ ÈÏæä ãÓÍ ÇáãÚÇÏáÇÊ
-    wsI.Range("F2").ClearContents
-    wsI.Range("I2").ClearContents
-    wsI.Range("B3:J3").ClearContents
+    wsI.Range(RANGE_INVOICE_ITEMS_C).ClearContents
+    wsI.Range(RANGE_INVOICE_ITEMS_DE).ClearContents
+    wsI.Range(RANGE_INVOICE_ITEMS_F).ClearContents
+    wsI.Range(RANGE_INVOICE_ITEMS_G).ClearContents
+    wsI.Range(RANGE_INVOICE_ITEMS_I).ClearContents
 
-    wsI.Range("C7:C31").ClearContents
-    wsI.Range("D7:E31").ClearContents
-    wsI.Range("F7:F31").ClearContents
-    wsI.Range("G7:G31").ClearContents
-    wsI.Range("I7:I31").ClearContents
-
-    'ÊİÑíÛ ÇáÚãíá (B2) + ComboBox1 Åä æÌÏ
-    wsI.Range("B2").ClearContents
+    'ØªÙØ±ÙŠØº Ø§Ù„Ø¹Ù…ÙŠÙ„ (B2) + ComboBox1 Ø¥Ù† ÙˆØ¬Ø¯
+    wsI.Range(CELL_INVOICE_CUSTOMER).ClearContents
     On Error Resume Next
     wsI.OLEObjects("ComboBox1").Object.Value = ""
     wsI.OLEObjects("ComboBox1").Object.Text = ""
-    On Error GoTo 0
+    On Error GoTo CleanExit
 
-    MsgBox "? Êã ÍİÙ ÇáİÇÊæÑÉ æÊÑÍíáåÇ Åáì ÍÓÇÈ ÇáÚãíá: " & customer, vbInformation
+    MsgBox "? ØªÙ… Ø­ÙØ¸ Ø§Ù„ÙØ§ØªÙˆØ±Ø© ÙˆØªØ±Ø­ÙŠÙ„Ù‡Ø§ Ø¥Ù„Ù‰ Ø­Ø³Ø§Ø¨ Ø§Ù„Ø¹Ù…ÙŠÙ„: " & customer, vbInformation
+
+CleanExit:
+    RestoreProtectWorkbook wasProtected
+    If Err.Number <> 0 Then
+        Err.Raise Err.Number, Err.Source, Err.Description
+    End If
 End Sub
 
 '========================
-' İÊÍ ßÔİ ÍÓÇÈ ÇáÚãáÇÁ
+' ÙØªØ­ ÙƒØ´Ù Ø­Ø³Ø§Ø¨ Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡
 '========================
 Public Sub Open_Kashf_Hesab()
     On Error GoTo ErrH
-    ThisWorkbook.Worksheets("ßÔİ_ÍÓÇÈ_ÇáÚãáÇÁ").Activate
+    ThisWorkbook.Worksheets(SHEET_CUSTOMER_STATEMENT).Activate
     Exit Sub
 ErrH:
-    MsgBox "ÔíÊ (ßÔİ_ÍÓÇÈ_ÇáÚãáÇÁ) ÛíÑ ãæÌæÏ. ÊÃßÏ ãä ÇÓã ÇáÔíÊ.", vbExclamation
+    MsgBox "Ø´ÙŠØª (ÙƒØ´Ù_Ø­Ø³Ø§Ø¨_Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡) ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯. ØªØ£ÙƒØ¯ Ù…Ù† Ø§Ø³Ù… Ø§Ù„Ø´ÙŠØª.", vbExclamation
 End Sub
 
-'İÊÍ ÕİÍÉ ÅÏÎÇá ÇáİÇÊæÑÉ
+'ÙØªØ­ ØµÙØ­Ø© Ø¥Ø¯Ø®Ø§Ù„ Ø§Ù„ÙØ§ØªÙˆØ±Ø©
 Public Sub Open_InvoiceEntry()
     On Error GoTo ErrH
-    ThisWorkbook.Worksheets("ÅÏÎÇá_İÇÊæÑÉ").Activate
+    ThisWorkbook.Worksheets(SHEET_INVOICE).Activate
     Exit Sub
 ErrH:
-    MsgBox "ÔíÊ (ÅÏÎÇá_İÇÊæÑÉ) ÛíÑ ãæÌæÏ. ÊÃßÏ ãä ÇáÇÓã.", vbExclamation
+    MsgBox "Ø´ÙŠØª (Ø¥Ø¯Ø®Ø§Ù„_ÙØ§ØªÙˆØ±Ø©) ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯. ØªØ£ÙƒØ¯ Ù…Ù† Ø§Ù„Ø§Ø³Ù….", vbExclamation
 End Sub
 
 '========================
-' ÅÖÇİÉ Úãíá ÌÏíÏ (íÖíİ ÇáÇÓã İí ŞÇÆãÉ_ÚãáÇÁ + íäÔÆ ÔíÊ ÇáÚãíá ãÎİí)
+' Ø¥Ø¶Ø§ÙØ© Ø¹Ù…ÙŠÙ„ Ø¬Ø¯ÙŠØ¯ (ÙŠØ¶ÙŠÙ Ø§Ù„Ø§Ø³Ù… ÙÙŠ Ù‚Ø§Ø¦Ù…Ø©_Ø¹Ù…Ù„Ø§Ø¡ + ÙŠÙ†Ø´Ø¦ Ø´ÙŠØª Ø§Ù„Ø¹Ù…ÙŠÙ„ Ù…Ø®ÙÙŠ)
 '========================
 Public Sub Add_New_Customer()
 
@@ -345,86 +339,84 @@ Public Sub Add_New_Customer()
     Dim nm As String
 
     On Error GoTo ErrH
-    Set ws = ThisWorkbook.Worksheets("ŞÇÆãÉ_ÚãáÇÁ")
+    Set ws = ThisWorkbook.Worksheets(SHEET_CUSTOMERS)
 
-    newName = InputBox("ÇßÊÈ ÇÓã ÇáÚãíá ÇáÌÏíÏ:", "ÅÖÇİÉ Úãíá")
+    newName = InputBox("Ø§ÙƒØªØ¨ Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„ Ø§Ù„Ø¬Ø¯ÙŠØ¯:", "Ø¥Ø¶Ø§ÙØ© Ø¹Ù…ÙŠÙ„")
     newName = Trim(newName)
     If newName = "" Then Exit Sub
 
     nm = SafeSheetName(newName)
     If nm = "" Then
-        MsgBox "ÇÓã ÇáÚãíá ÛíÑ ÕÇáÍ.", vbExclamation
+        MsgBox "Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„ ØºÙŠØ± ØµØ§Ù„Ø­.", vbExclamation
         Exit Sub
     End If
 
     If CustomerExistsInList(newName) Then
-        MsgBox "åĞÇ ÇáÚãíá ãæÌæÏ ÈÇáİÚá İí ÇáŞÇÆãÉ.", vbExclamation
+        MsgBox "Ù‡Ø°Ø§ Ø§Ù„Ø¹Ù…ÙŠÙ„ Ù…ÙˆØ¬ÙˆØ¯ Ø¨Ø§Ù„ÙØ¹Ù„ ÙÙŠ Ø§Ù„Ù‚Ø§Ø¦Ù…Ø©.", vbExclamation
         Exit Sub
     End If
 
     If SheetExists(nm) Then
-        MsgBox "íæÌÏ ÔíÊ ÈäİÓ ÇÓã ÇáÚãíá ÈÇáİÚá. ÇÎÊÑ ÇÓã ãÎÊáİ.", vbExclamation
+        MsgBox "ÙŠÙˆØ¬Ø¯ Ø´ÙŠØª Ø¨Ù†ÙØ³ Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„ Ø¨Ø§Ù„ÙØ¹Ù„. Ø§Ø®ØªØ± Ø§Ø³Ù… Ù…Ø®ØªÙ„Ù.", vbExclamation
         Exit Sub
     End If
 
-    'İß ÇáŞİá ãÄŞÊğÇ
-    On Error Resume Next
-    ThisWorkbook.Unprotect Password:=ADMIN_PWD
-    On Error GoTo ErrH
+    'ÙÙƒ Ø§Ù„Ù‚ÙÙ„ Ù…Ø¤Ù‚ØªÙ‹Ø§
+    Dim wasProtected As Boolean
+    wasProtected = TryUnprotectWorkbook()
 
     lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row + 1
     If lastRow < 2 Then lastRow = 2
 
     ws.Cells(lastRow, "A").Value = newName
 
-    'ÅäÔÇÁ ÔíÊ ÇáÚãíá (ãÎİí)
+    'Ø¥Ù†Ø´Ø§Ø¡ Ø´ÙŠØª Ø§Ù„Ø¹Ù…ÙŠÙ„ (Ù…Ø®ÙÙŠ)
     CreateCustomerSheet nm
     
     
 
 
-    'ÊÓÌíá ÇÓã ÇáÔíÊ İí C (ÇÎÊíÇÑí)
+    'ØªØ³Ø¬ÙŠÙ„ Ø§Ø³Ù… Ø§Ù„Ø´ÙŠØª ÙÙŠ C (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)
     ws.Cells(lastRow, "C").Value = nm
 
-    'ÅÚÇÏÉ ÇáŞİá
-    On Error Resume Next
-    ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
-    On Error GoTo 0
+    'Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ù‚ÙÙ„
+    RestoreProtectWorkbook wasProtected
 
     ws.Activate
     ws.Cells(lastRow, "A").Select
-    MsgBox "? ÊãÊ ÅÖÇİÉ ÇáÚãíá ÈäÌÇÍ: " & newName, vbInformation
+    MsgBox "? ØªÙ…Øª Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø¹Ù…ÙŠÙ„ Ø¨Ù†Ø¬Ø§Ø­: " & newName, vbInformation
     Exit Sub
 
 ErrH:
-    MsgBox "ÍÏË ÎØÃ ÃËäÇÁ ÅÖÇİÉ ÇáÚãíá. ÊÃßÏ ãä æÌæÏ ÔíÊ (ŞÇÆãÉ_ÚãáÇÁ) æÃä ßáãÉ ÇáãÑæÑ ÕÍíÍÉ.", vbExclamation
+    RestoreProtectWorkbook wasProtected
+    MsgBox "Ø­Ø¯Ø« Ø®Ø·Ø£ Ø£Ø«Ù†Ø§Ø¡ Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø¹Ù…ÙŠÙ„. ØªØ£ÙƒØ¯ Ù…Ù† ÙˆØ¬ÙˆØ¯ Ø´ÙŠØª (Ù‚Ø§Ø¦Ù…Ø©_Ø¹Ù…Ù„Ø§Ø¡) ÙˆØ£Ù† ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± ØµØ­ÙŠØ­Ø©.", vbExclamation
     
     
 End Sub
 
 '========================
-' İÊÍ ÍÓÇÈ ÇáÚãíá ãÄŞÊÇğ (íÙåÑ ÇáÔíÊ Ëã íõÎİì ÚäÏ ÇáÎÑæÌ – ÚÈÑ ThisWorkbook)
+' ÙØªØ­ Ø­Ø³Ø§Ø¨ Ø§Ù„Ø¹Ù…ÙŠÙ„ Ù…Ø¤Ù‚ØªØ§Ù‹ (ÙŠØ¸Ù‡Ø± Ø§Ù„Ø´ÙŠØª Ø«Ù… ÙŠÙØ®ÙÙ‰ Ø¹Ù†Ø¯ Ø§Ù„Ø®Ø±ÙˆØ¬ â€“ Ø¹Ø¨Ø± ThisWorkbook)
 '========================
 Public Sub OpenCustomerSheet2()
     Dim shName As String
     Dim wsCust As Worksheet
+    Dim wasProtected As Boolean
 
-    shName = Trim(ThisWorkbook.Worksheets("ßÔİ_ÍÓÇÈ_ÇáÚãáÇÁ").Range("B2").Value)
+    shName = Trim(ThisWorkbook.Worksheets(SHEET_CUSTOMER_STATEMENT).Range(CELL_KASHF_CUSTOMER).Value)
     If shName = "" Then
-        MsgBox "ÇÎÊÑ ÇÓã ÇáÚãíá ÃæáÇğ", vbExclamation
+        MsgBox "Ø§Ø®ØªØ± Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„ Ø£ÙˆÙ„Ø§Ù‹", vbExclamation
         Exit Sub
     End If
 
     shName = SafeSheetName(shName)
 
     If SheetExists(shName) = False Then
-        MsgBox "ÔíÊ ÇáÚãíá ÛíÑ ãæÌæÏ: " & shName, vbExclamation
+        MsgBox "Ø´ÙŠØª Ø§Ù„Ø¹Ù…ÙŠÙ„ ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯: " & shName, vbExclamation
         Exit Sub
     End If
 
-    On Error Resume Next
-    ThisWorkbook.Unprotect Password:=ADMIN_PWD
-    On Error GoTo 0
+    On Error GoTo CleanExit
+    wasProtected = TryUnprotectWorkbook()
 
     Set wsCust = ThisWorkbook.Worksheets(shName)
     wsCust.Visible = xlSheetVisible
@@ -433,9 +425,14 @@ Public Sub OpenCustomerSheet2()
 
     wsCust.Activate
 
-    On Error Resume Next
-    ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
-    On Error GoTo 0
+    RestoreProtectWorkbook wasProtected
+    Exit Sub
+
+CleanExit:
+    RestoreProtectWorkbook wasProtected
+    If Err.Number <> 0 Then
+        Err.Raise Err.Number, Err.Source, Err.Description
+    End If
 End Sub
 
 

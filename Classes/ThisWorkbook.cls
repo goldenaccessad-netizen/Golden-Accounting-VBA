@@ -21,14 +21,14 @@ Private Sub Workbook_SheetActivate(ByVal Sh As Object)
 
     Application.EnableEvents = False
 
-    'áæ ßÇä İíå ÔíÊ Úãíá ãİÊæÍ ãÄŞÊğÇ æİÊÍäÇ ÔíÊ ÊÇäí
+    'Ù„Ùˆ ÙƒØ§Ù† ÙÙŠÙ‡ Ø´ÙŠØª Ø¹Ù…ÙŠÙ„ Ù…ÙØªÙˆØ­ Ù…Ø¤Ù‚ØªÙ‹Ø§ ÙˆÙØªØ­Ù†Ø§ Ø´ÙŠØª ØªØ§Ù†ÙŠ
     If TempOpenedCustomerSheet <> "" Then
         If Sh.Name <> TempOpenedCustomerSheet Then
             HideTempCustomerSheet
         End If
     End If
 
-    'áæ ßÇä İíå ÔíÊ ÅÌãÇáíÇÊ ãİÊæÍ ãÄŞÊğÇ
+    'Ù„Ùˆ ÙƒØ§Ù† ÙÙŠÙ‡ Ø´ÙŠØª Ø¥Ø¬Ù…Ø§Ù„ÙŠØ§Øª Ù…ÙØªÙˆØ­ Ù…Ø¤Ù‚ØªÙ‹Ø§
     If TempOpenedSummarySheet <> "" Then
         If Sh.Name <> TempOpenedSummarySheet Then
             HideTempSummarySheet
@@ -46,23 +46,25 @@ End Sub
 Private Sub Workbook_SheetDeactivate(ByVal Sh As Object)
     On Error Resume Next
 
-    'ÚäÏ ÇáÎÑæÌ ãä ÔíÊ Úãíá ãİÊæÍ ãÄŞÊğÇ
+    Dim wasProtected As Boolean
+
+    'Ø¹Ù†Ø¯ Ø§Ù„Ø®Ø±ÙˆØ¬ Ù…Ù† Ø´ÙŠØª Ø¹Ù…ÙŠÙ„ Ù…ÙØªÙˆØ­ Ù…Ø¤Ù‚ØªÙ‹Ø§
     If TempOpenedCustomerSheet <> "" Then
         If Sh.Name = TempOpenedCustomerSheet Then
-            ThisWorkbook.Unprotect Password:=ADMIN_PWD
+            wasProtected = TryUnprotectWorkbook()
             Sh.Visible = xlSheetVeryHidden
             TempOpenedCustomerSheet = ""
-            ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
+            RestoreProtectWorkbook wasProtected
         End If
     End If
 
-    'ÚäÏ ÇáÎÑæÌ ãä ÔíÊ ÅÌãÇáíÇÊ ãİÊæÍ ãÄŞÊğÇ
+    'Ø¹Ù†Ø¯ Ø§Ù„Ø®Ø±ÙˆØ¬ Ù…Ù† Ø´ÙŠØª Ø¥Ø¬Ù…Ø§Ù„ÙŠØ§Øª Ù…ÙØªÙˆØ­ Ù…Ø¤Ù‚ØªÙ‹Ø§
     If TempOpenedSummarySheet <> "" Then
         If Sh.Name = TempOpenedSummarySheet Then
-            ThisWorkbook.Unprotect Password:=ADMIN_PWD
+            wasProtected = TryUnprotectWorkbook()
             Sh.Visible = xlSheetVeryHidden
             TempOpenedSummarySheet = ""
-            ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
+            RestoreProtectWorkbook wasProtected
         End If
     End If
 End Sub

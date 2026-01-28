@@ -4,9 +4,9 @@ Option Explicit
 Sub Build_ActiveX_Buttons()
 
     Dim ws As Worksheet
-    Set ws = ThisWorkbook.Worksheets("ลฯฮวแ_Ýวสๆัษ")
+    Set ws = ThisWorkbook.Worksheets(SHEET_INVOICE)
 
-    'อะÝ ราัวั Þฯํใษ ศไÝำ วแรำใวม
+    'ุญุฐู ุฃุฒุฑุงุฑ ูุฏูู…ุฉ ุจููุณ ุงูุฃุณู…ุงุก
     DeleteBtnIfExists ws, "btnSave"
     DeleteBtnIfExists ws, "btnClear"
     DeleteBtnIfExists ws, "btnAddCustomer"
@@ -14,15 +14,15 @@ Sub Build_ActiveX_Buttons()
     DeleteBtnIfExists ws, "btnLock"
     DeleteBtnIfExists ws, "btnUnlock"
 
-    'ลไิวม วแราัวั (รแๆวไ RGB ใึใๆไษ)
-    AddBtn ws, "btnSave", "อÝู วแÝวสๆัษ", 420, 30, 170, 40, RGB(0, 160, 0), True
-    AddBtn ws, "btnClear", "สÝัํÛ วแÝวสๆัษ", 240, 30, 170, 40, RGB(255, 140, 0), True
-    AddBtn ws, "btnAddCustomer", "ลึวÝษ ฺใํแ", 60, 30, 170, 40, RGB(0, 120, 215), True
-    AddBtn ws, "btnOpenKashf", "Ýสอ ฿ิÝ อำวศ วแฺใแวม", 60, 80, 350, 40, RGB(128, 0, 128), True
-    AddBtn ws, "btnLock", "ÞÝแ วแใแÝ", 420, 80, 170, 40, RGB(220, 0, 0), True
-    AddBtn ws, "btnUnlock", "Ýสอ วแใแÝ", 420, 130, 170, 40, RGB(0, 170, 255), True
+    'ุฅูุดุงุก ุงูุฃุฒุฑุงุฑ (ุฃููุงู RGB ู…ุถู…ููุฉ)
+    AddBtn ws, "btnSave", "ุญูุธ ุงููุงุชูุฑุฉ", 420, 30, 170, 40, RGB(0, 160, 0), True
+    AddBtn ws, "btnClear", "ุชูุฑูุบ ุงููุงุชูุฑุฉ", 240, 30, 170, 40, RGB(255, 140, 0), True
+    AddBtn ws, "btnAddCustomer", "ุฅุถุงูุฉ ุนู…ูู", 60, 30, 170, 40, RGB(0, 120, 215), True
+    AddBtn ws, "btnOpenKashf", "ูุชุญ ูุดู ุญุณุงุจ ุงูุนู…ูุงุก", 60, 80, 350, 40, RGB(128, 0, 128), True
+    AddBtn ws, "btnLock", "ููู ุงูู…ูู", 420, 80, 170, 40, RGB(220, 0, 0), True
+    AddBtn ws, "btnUnlock", "ูุชุญ ุงูู…ูู", 420, 130, 170, 40, RGB(0, 170, 255), True
 
-    MsgBox "? สใ ลไิวม ราัวั ActiveX ศไฬวอ.", vbInformation
+    MsgBox "? ุชู… ุฅูุดุงุก ุฃุฒุฑุงุฑ ActiveX ุจูุฌุงุญ.", vbInformation
 
 End Sub
 
@@ -82,7 +82,7 @@ Public Function CustomerHasAccount(ByVal customerSheetName As String) As Boolean
         Exit Function
     End If
 
-    '1) ใฺํวั วแัีํฯ (K4)
+    '1) ู…ุนูุงุฑ ุงูุฑุตูุฏ (K4)
     If IsNumeric(ws.Range("K4").Value) Then
         bal = CDbl(ws.Range("K4").Value)
         If Abs(bal) > 0.00001 Then
@@ -91,8 +91,8 @@ Public Function CustomerHasAccount(ByVal customerSheetName As String) As Boolean
         End If
     End If
 
-    '2) ใฺํวั วแอั฿ษ วแอÞํÞํ:
-    'วฺสศั วแอั฿ษ ใๆฬๆฯษ ÝÞุ ละว ๆ๕ฬฯ ัÞใ/ไี Ýฺแํ Ýํ ฺใๆฯ A ใไ ีÝ 7 ลแ์ ยฮั วแิํส
+    '2) ู…ุนูุงุฑ ุงูุญุฑูุฉ ุงูุญูููู:
+    'ุงุนุชุจุฑ ุงูุญุฑูุฉ ู…ูุฌูุฏุฉ ููุท ุฅุฐุง ููุฌุฏ ุฑูู…/ูุต ูุนูู ูู ุนู…ูุฏ A ู…ู ุตู 7 ุฅูู ุขุฎุฑ ุงูุดูุช
     lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
     If lastRow < 7 Then
         CustomerHasAccount = False
@@ -103,7 +103,7 @@ Public Function CustomerHasAccount(ByVal customerSheetName As String) As Boolean
 
     For Each c In rng
         If Trim(CStr(c.Value)) <> "" Then
-            'แๆ Ýํๅว Þํใษ อÞํÞํษ (ัÞใ Ýวสๆัษ/รใั ิÛแ)
+            'ูู ูููุง ููู…ุฉ ุญููููุฉ (ุฑูู… ูุงุชูุฑุฉ/ุฃู…ุฑ ุดุบู)
             CustomerHasAccount = True
             Exit Function
         End If
