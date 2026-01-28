@@ -1,4 +1,5 @@
 Attribute VB_Name = "Update_Monthly_Sales"
+Option Explicit
 Public Sub Update_Monthly_Sales_To_TotalsSheet()
 
     Dim wsSum As Worksheet
@@ -12,31 +13,31 @@ Public Sub Update_Monthly_Sales_To_TotalsSheet()
     Dim m As Long
     Dim totalVal As Double
 
-    '? ฺฯ๘แ แๆ วำใ วแิํส ใฮสแÝ
-    Set wsSum = ThisWorkbook.Worksheets("ลฬใวแํ_วแใศํฺวส")
-    Set wsList = ThisWorkbook.Worksheets("Þวฦใษ_ฺใแวม")
+    '? ุนุฏู‘ู ูู ุงุณู… ุงูุดูุช ู…ุฎุชูู
+    Set wsSum = ThisWorkbook.Worksheets(SHEET_TOTAL_SALES)
+    Set wsList = ThisWorkbook.Worksheets(SHEET_CUSTOMERS)
 
-    'รำใวม วแริๅั (แวาใ สุวศÞ วแแํ ใ฿สๆศ Ýํ ฺใๆฯ M ฯวฮแ ิํส วแฺใํแ)
-    monthsArr = Array("ํไวํั", "Ýศัวํั", "ใวัำ", "รศัํแ", "ใวํๆ", "ํๆไํๆ", _
-                      "ํๆแํๆ", "รÛำุำ", "ำศสใศั", "ร฿สๆศั", "ไๆÝใศั", "ฯํำใศั")
+    'ุฃุณู…ุงุก ุงูุฃุดูุฑ (ูุงุฒู… ุชุทุงุจู ุงููู ู…ูุชูุจ ูู ุนู…ูุฏ M ุฏุงุฎู ุดูุช ุงูุนู…ูู)
+    monthsArr = Array("ููุงูุฑ", "ูุจุฑุงูุฑ", "ู…ุงุฑุณ", "ุฃุจุฑูู", "ู…ุงูู", "ููููู", _
+                      "ููููู", "ุฃุบุณุทุณ", "ุณุจุชู…ุจุฑ", "ุฃูุชูุจุฑ", "ูููู…ุจุฑ", "ุฏูุณู…ุจุฑ")
 
-    '---- ฿สวศษ ฺไวๆํไ วแฬฯๆแ (ศฯๆไ ใำอ สไำํÞ) ----
-    wsSum.Range("A1").Value = "วำใ วแฺใํแ"
+    '---- ูุชุงุจุฉ ุนูุงููู ุงูุฌุฏูู (ุจุฏูู ู…ุณุญ ุชูุณูู) ----
+    wsSum.Range("A1").Value = "ุงุณู… ุงูุนู…ูู"
     For m = LBound(monthsArr) To UBound(monthsArr)
         wsSum.Cells(1, 2 + m).Value = monthsArr(m) 'B1..M1
     Next m
 
-    '---- Þัวมษ วแฺใแวม ใไ Þวฦใษ_ฺใแวม ----
+    '---- ูุฑุงุกุฉ ุงูุนู…ูุงุก ู…ู ูุงุฆู…ุฉ_ุนู…ูุงุก ----
     lastCustRow = wsList.Cells(wsList.Rows.Count, "A").End(xlUp).Row
     If lastCustRow < 2 Then
-        MsgBox "แว สๆฬฯ รำใวม ฺใแวม Ýํ ิํส Þวฦใษ_ฺใแวม.", vbExclamation
+        MsgBox "ูุง ุชูุฌุฏ ุฃุณู…ุงุก ุนู…ูุงุก ูู ุดูุช ูุงุฆู…ุฉ_ุนู…ูุงุก.", vbExclamation
         Exit Sub
     End If
 
-    '---- ว฿สศ รำใวม วแฺใแวม Ýํ วแฺใๆฯ A ๆวใแร วแลฬใวแํวส ----
+    '---- ุงูุชุจ ุฃุณู…ุงุก ุงูุนู…ูุงุก ูู ุงูุนู…ูุฏ A ูุงู…ูุฃ ุงูุฅุฌู…ุงููุงุช ----
     outRow = 2
 
-    'ใแวอูษ: ํใ฿ไ สไูํÝ ใไุÞษ วแรัÞวใ ÝÞุ (ศฯๆไ ๅฯใ วแสีใํใ)
+    'ู…ูุงุญุธุฉ: ูู…ูู ุชูุธูู ู…ูุทูุฉ ุงูุฃุฑูุงู… ููุท (ุจุฏูู ูุฏู… ุงูุชุตู…ูู…)
     wsSum.Range("A2:M10000").ClearContents
 
     For i = 2 To lastCustRow
@@ -50,7 +51,7 @@ Public Sub Update_Monthly_Sales_To_TotalsSheet()
             If SheetExists(custSheet) Then
                 Set wsCust = ThisWorkbook.Worksheets(custSheet)
 
-                '? วแสฬใํฺ ใไ วแฺใๆฯ L อำศ วแิๅั Ýํ วแฺใๆฯ M
+                '? ุงูุชุฌู…ูุน ู…ู ุงูุนู…ูุฏ L ุญุณุจ ุงูุดูุฑ ูู ุงูุนู…ูุฏ M
                 For m = LBound(monthsArr) To UBound(monthsArr)
                     On Error Resume Next
                     totalVal = WorksheetFunction.SumIfs(wsCust.Range("L:L"), wsCust.Range("M:M"), monthsArr(m))
@@ -61,7 +62,7 @@ Public Sub Update_Monthly_Sales_To_TotalsSheet()
                     wsSum.Cells(outRow, 2 + m).Value = totalVal
                 Next m
             Else
-                'แๆ ิํส วแฺใํแ ใิ ใๆฬๆฯ
+                'ูู ุดูุช ุงูุนู…ูู ู…ุด ู…ูุฌูุฏ
                 For m = LBound(monthsArr) To UBound(monthsArr)
                     wsSum.Cells(outRow, 2 + m).Value = 0
                 Next m
@@ -72,7 +73,7 @@ Public Sub Update_Monthly_Sales_To_TotalsSheet()
 
     Next i
 
-   ' MsgBox "? สใ สอฯํห ิํส วแลฬใวแํวส.", vbInformation
+   ' MsgBox "? ุชู… ุชุญุฏูุซ ุดูุช ุงูุฅุฌู…ุงููุงุช.", vbInformation
 
 End Sub
 

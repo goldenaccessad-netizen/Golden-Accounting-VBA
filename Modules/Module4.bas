@@ -2,7 +2,7 @@ Attribute VB_Name = "Module4"
 Option Explicit
 
 '========================================================
-' 1) ÊÍÏíË ãáÎÕ ÍÓÇÈÇÊ ÇáÚãáÇÁ (áÇ íÎİí ÇáÔíÊ æåæ äÔØ)
+' 1) ØªØ­Ø¯ÙŠØ« Ù…Ù„Ø®Øµ Ø­Ø³Ø§Ø¨Ø§Øª Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡ (Ù„Ø§ ÙŠØ®ÙÙŠ Ø§Ù„Ø´ÙŠØª ÙˆÙ‡Ùˆ Ù†Ø´Ø·)
 '========================================================
 Public Sub UpdateCustomerAccountsSummary(Optional ByVal HideAfterUpdate As Boolean = True)
 
@@ -11,36 +11,38 @@ Public Sub UpdateCustomerAccountsSummary(Optional ByVal HideAfterUpdate As Boole
     Dim custName As String, shName As String
     Dim wsBack As Worksheet
 
-    Set wsList = ThisWorkbook.Worksheets("ŞÇÆãÉ_ÚãáÇÁ")
+    Set wsList = ThisWorkbook.Worksheets(SHEET_CUSTOMERS)
 
-    'ÇÍİÙ ÇáÔíÊ ÇáÍÇáí ááÑÌæÚ áå áæ ÇÍÊÌäÇ äÎİí ãáÎÕ æåæ äÔØ
+    'Ø§Ø­ÙØ¸ Ø§Ù„Ø´ÙŠØª Ø§Ù„Ø­Ø§Ù„ÙŠ Ù„Ù„Ø±Ø¬ÙˆØ¹ Ù„Ù‡ Ù„Ùˆ Ø§Ø­ØªØ¬Ù†Ø§ Ù†Ø®ÙÙŠ Ù…Ù„Ø®Øµ ÙˆÙ‡Ùˆ Ù†Ø´Ø·
     Set wsBack = ActiveSheet
 
-    'İß Structure ãÄŞÊğÇ
-    On Error Resume Next
-    ThisWorkbook.Unprotect Password:=ADMIN_PWD
-    On Error GoTo 0
+    'ÙÙƒ Structure Ù…Ø¤Ù‚ØªÙ‹Ø§
+    Dim wasProtected As Boolean
+    On Error GoTo CleanExit
+    wasProtected = TryUnprotectWorkbook()
 
-    'ÇÍÕá Úáì ÔíÊ ÇáãáÎÕ Ãæ ÃäÔÆå
+    'Ø§Ø­ØµÙ„ Ø¹Ù„Ù‰ Ø´ÙŠØª Ø§Ù„Ù…Ù„Ø®Øµ Ø£Ùˆ Ø£Ù†Ø´Ø¦Ù‡
     On Error Resume Next
-    Set wsSum = ThisWorkbook.Worksheets("ãáÎÕ_ÍÓÇÈÇÊ_ÇáÚãáÇÁ")
+    Set wsSum = ThisWorkbook.Worksheets(SHEET_ACCOUNTS_SUMMARY)
     On Error GoTo 0
+    On Error GoTo CleanExit
 
     If wsSum Is Nothing Then
         Set wsSum = ThisWorkbook.Worksheets.Add(After:=ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count))
         On Error Resume Next
-        wsSum.Name = "ãáÎÕ_ÍÓÇÈÇÊ_ÇáÚãáÇÁ"
+        wsSum.Name = SHEET_ACCOUNTS_SUMMARY
         On Error GoTo 0
+        On Error GoTo CleanExit
     End If
 
-    'ÊÌåíÒ ÇáåíÏÑ (Õİ 1)
-    wsSum.Range("A1").Value = "ÇÓã ÇáÚãíá"
-    wsSum.Range("B1").Value = "ÅÌãÇáí ÇáãÈíÚÇÊ"
-    wsSum.Range("C1").Value = "ÅÌãÇáí ÇáãÏİæÚÇÊ"
-    wsSum.Range("D1").Value = "ÇáÑÕíÏ"
+    'ØªØ¬Ù‡ÙŠØ² Ø§Ù„Ù‡ÙŠØ¯Ø± (ØµÙ 1)
+    wsSum.Range("A1").Value = "Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„"
+    wsSum.Range("B1").Value = "Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù…Ø¨ÙŠØ¹Ø§Øª"
+    wsSum.Range("C1").Value = "Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù…Ø¯ÙÙˆØ¹Ø§Øª"
+    wsSum.Range("D1").Value = "Ø§Ù„Ø±ØµÙŠØ¯"
     wsSum.Rows(1).Font.Bold = True
 
-    'ÇãÓÍ ÈíÇäÇÊ İŞØ ãä Õİ 2
+    'Ø§Ù…Ø³Ø­ Ø¨ÙŠØ§Ù†Ø§Øª ÙÙ‚Ø· Ù…Ù† ØµÙ 2
     wsSum.Range("A2:D100000").ClearContents
 
     lastRow = wsList.Cells(wsList.Rows.Count, "A").End(xlUp).Row
@@ -69,7 +71,7 @@ Public Sub UpdateCustomerAccountsSummary(Optional ByVal HideAfterUpdate As Boole
         End If
     Next i
 
-    'áæ ãØáæÈ äÎİíå ÈÚÏ ÇáÊÍÏíË: áÇ íãßä ÅÎİÇÁ ÇáÔíÊ ÇáäÔØ
+    'Ù„Ùˆ Ù…Ø·Ù„ÙˆØ¨ Ù†Ø®ÙÙŠÙ‡ Ø¨Ø¹Ø¯ Ø§Ù„ØªØ­Ø¯ÙŠØ«: Ù„Ø§ ÙŠÙ…ÙƒÙ† Ø¥Ø®ÙØ§Ø¡ Ø§Ù„Ø´ÙŠØª Ø§Ù„Ù†Ø´Ø·
     If HideAfterUpdate Then
         If ActiveSheet.Name = wsSum.Name Then
             wsBack.Activate
@@ -77,23 +79,24 @@ Public Sub UpdateCustomerAccountsSummary(Optional ByVal HideAfterUpdate As Boole
         wsSum.Visible = xlSheetVeryHidden
     End If
 
-    'ÅÚÇÏÉ Şİá Structure
-    On Error Resume Next
-    ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
-    On Error GoTo 0
-
+    'Ø¥Ø¹Ø§Ø¯Ø© Ù‚ÙÙ„ Structure
+CleanExit:
+    RestoreProtectWorkbook wasProtected
+    If Err.Number <> 0 Then
+        Err.Raise Err.Number, Err.Source, Err.Description
+    End If
 End Sub
 
 
 '========================================================
-' 2) İÊÍ ÔíÊ ãáÎÕ/ÅÌãÇáíÇÊ ÈßáãÉ ãÑæÑ + ÊÍÏíË ÊáŞÇÆí
+' 2) ÙØªØ­ Ø´ÙŠØª Ù…Ù„Ø®Øµ/Ø¥Ø¬Ù…Ø§Ù„ÙŠØ§Øª Ø¨ÙƒÙ„Ù…Ø© Ù…Ø±ÙˆØ± + ØªØ­Ø¯ÙŠØ« ØªÙ„Ù‚Ø§Ø¦ÙŠ
 '========================================================
 Public Sub OpenSummarySheet_WithPassword(ByVal SheetName As String)
 
     Dim frm As UserForm1
 
     If SheetExists(SheetName) = False Then
-        MsgBox "ÇáÔíÊ ÛíÑ ãæÌæÏ: " & SheetName, vbExclamation
+        MsgBox "Ø§Ù„Ø´ÙŠØª ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯: " & SheetName, vbExclamation
         Exit Sub
     End If
 
@@ -102,28 +105,30 @@ Public Sub OpenSummarySheet_WithPassword(ByVal SheetName As String)
     If frm.IsOk = False Then Exit Sub
 
     If frm.EnteredPassword <> ADMIN_PWD Then
-        MsgBox "ßáãÉ ÇáãÑæÑ ÛíÑ ÕÍíÍÉ", vbCritical
+        MsgBox "ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± ØºÙŠØ± ØµØ­ÙŠØ­Ø©", vbCritical
         Exit Sub
     End If
 
     Application.EnableEvents = False
     Application.ScreenUpdating = False
+    On Error GoTo CleanExit
 
-    'İß Structure
-    ThisWorkbook.Unprotect Password:=ADMIN_PWD
+    'ÙÙƒ Structure
+    Dim wasProtected As Boolean
+    wasProtected = TryUnprotectWorkbook()
 
-    'áæ ÔíÊ ÇáãáÎÕ: ÍÏË ÇáÈíÇäÇÊ
-    If SheetName = "ãáÎÕ_ÍÓÇÈÇÊ_ÇáÚãáÇÁ" Then
+    'Ù„Ùˆ Ø´ÙŠØª Ø§Ù„Ù…Ù„Ø®Øµ: Ø­Ø¯Ø« Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª
+    If SheetName = SHEET_ACCOUNTS_SUMMARY Then
         UpdateCustomerAccountsSummary False
-        '? ãåã ÌÏğÇ: ÇáÏÇáÉ ÊŞİá Structure ãÑÉ ÃÎÑì¡ İÇİÊÍå ÊÇäí åäÇ
-        ThisWorkbook.Unprotect Password:=ADMIN_PWD
+        '? Ù…Ù‡Ù… Ø¬Ø¯Ù‹Ø§: Ø§Ù„Ø¯Ø§Ù„Ø© ØªÙ‚ÙÙ„ Structure Ù…Ø±Ø© Ø£Ø®Ø±Ù‰ØŒ ÙØ§ÙØªØ­Ù‡ ØªØ§Ù†ÙŠ Ù‡Ù†Ø§
+        wasProtected = TryUnprotectWorkbook()
     End If
 
-    'ÊÃßÏ Ãä Structure ãİÊæÍ ŞÈá ÊÛííÑ Visible
+    'ØªØ£ÙƒØ¯ Ø£Ù† Structure Ù…ÙØªÙˆØ­ Ù‚Ø¨Ù„ ØªØºÙŠÙŠØ± Visible
     If ThisWorkbook.ProtectStructure Then
         Application.EnableEvents = True
         Application.ScreenUpdating = True
-        MsgBox "áÇ íãßä İÊÍ ÇáÔíÊ áÃä ÈäíÉ ÇáãÕäİ ãÇ ÒÇáÊ ãÍãíÉ.", vbCritical
+        MsgBox "Ù„Ø§ ÙŠÙ…ÙƒÙ† ÙØªØ­ Ø§Ù„Ø´ÙŠØª Ù„Ø£Ù† Ø¨Ù†ÙŠØ© Ø§Ù„Ù…ØµÙ†Ù Ù…Ø§ Ø²Ø§Ù„Øª Ù…Ø­Ù…ÙŠØ©.", vbCritical
         Exit Sub
     End If
 
@@ -134,30 +139,39 @@ Public Sub OpenSummarySheet_WithPassword(ByVal SheetName As String)
 
     TempOpenedSummarySheet = SheetName
 
-    'ÅÚÇÏÉ ÇáŞİá
-    ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
+    'Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ù‚ÙÙ„
+    RestoreProtectWorkbook wasProtected
 
     Application.EnableEvents = True
     Application.ScreenUpdating = True
+    Exit Sub
+
+CleanExit:
+    RestoreProtectWorkbook wasProtected
+    Application.EnableEvents = True
+    Application.ScreenUpdating = True
+    If Err.Number <> 0 Then
+        Err.Raise Err.Number, Err.Source, Err.Description
+    End If
 End Sub
 
 
 
 
 '========================================================
-' 3) ãÇßÑæÒ ÌÇåÒÉ ááÃÒÑÇÑ (ÇÓÊÏÚÇÁ ãÈÇÔÑ)
+' 3) Ù…Ø§ÙƒØ±ÙˆØ² Ø¬Ø§Ù‡Ø²Ø© Ù„Ù„Ø£Ø²Ø±Ø§Ø± (Ø§Ø³ØªØ¯Ø¹Ø§Ø¡ Ù…Ø¨Ø§Ø´Ø±)
 '========================================================
 Public Sub Open_AccountsSummary_Sheet()
-    OpenSummarySheet_WithPassword "ãáÎÕ_ÍÓÇÈÇÊ_ÇáÚãáÇÁ"
+    OpenSummarySheet_WithPassword SHEET_ACCOUNTS_SUMMARY
 End Sub
 
 Public Sub Open_TotalSales_Sheet()
-    OpenSummarySheet_WithPassword "ÅÌãÇáí_ÇáãÈíÚÇÊ"
+    OpenSummarySheet_WithPassword SHEET_TOTAL_SALES
 End Sub
 
 
 '========================================================
-' 4) ÑÌæÚ + ÅÎİÇÁ ÇáÔíÊ ÇáÍÇáí İæÑğÇ (ááãáÎÕÇÊ)
+' 4) Ø±Ø¬ÙˆØ¹ + Ø¥Ø®ÙØ§Ø¡ Ø§Ù„Ø´ÙŠØª Ø§Ù„Ø­Ø§Ù„ÙŠ ÙÙˆØ±Ù‹Ø§ (Ù„Ù„Ù…Ù„Ø®ØµØ§Øª)
 '========================================================
 Public Sub HideCurrentAndGo(ByVal TargetSheet As String)
 
@@ -165,53 +179,59 @@ Public Sub HideCurrentAndGo(ByVal TargetSheet As String)
     Set wsCurrent = ActiveSheet
 
     If SheetExists(TargetSheet) = False Then
-        MsgBox "ÇáÔíÊ ÛíÑ ãæÌæÏ: " & TargetSheet, vbExclamation
+        MsgBox "Ø§Ù„Ø´ÙŠØª ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯: " & TargetSheet, vbExclamation
         Exit Sub
     End If
 
     Application.EnableEvents = False
 
-    'İß Structure ãÄŞÊğÇ
-    On Error Resume Next
-    ThisWorkbook.Unprotect Password:=ADMIN_PWD
-    On Error GoTo 0
+    'ÙÙƒ Structure Ù…Ø¤Ù‚ØªÙ‹Ø§
+    Dim wasProtected As Boolean
+    On Error GoTo CleanExit
+    wasProtected = TryUnprotectWorkbook()
 
-    'ÇĞåÈ ááåÏİ ÃæáÇğ
+    'Ø§Ø°Ù‡Ø¨ Ù„Ù„Ù‡Ø¯Ù Ø£ÙˆÙ„Ø§Ù‹
     ThisWorkbook.Worksheets(TargetSheet).Activate
 
-    'ÇÎİö ÇáÔíÊ ÇáĞí ßäÊ İíå
+    'Ø§Ø®ÙÙ Ø§Ù„Ø´ÙŠØª Ø§Ù„Ø°ÙŠ ÙƒÙ†Øª ÙÙŠÙ‡
     wsCurrent.Visible = xlSheetVeryHidden
 
-    'ÕİøÑ ÇáãÊÛíÑ áæ ßÇä ãáÎÕ ãİÊæÍ ãÄŞÊÇğ
+    'ØµÙÙ‘Ø± Ø§Ù„Ù…ØªØºÙŠØ± Ù„Ùˆ ÙƒØ§Ù† Ù…Ù„Ø®Øµ Ù…ÙØªÙˆØ­ Ù…Ø¤Ù‚ØªØ§Ù‹
     If TempOpenedSummarySheet = wsCurrent.Name Then TempOpenedSummarySheet = ""
 
-    'ÅÚÇÏÉ ÇáŞİá
-    On Error Resume Next
-    ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
-    On Error GoTo 0
+    'Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ù‚ÙÙ„
+    RestoreProtectWorkbook wasProtected
 
     Application.EnableEvents = True
+    Exit Sub
+
+CleanExit:
+    RestoreProtectWorkbook wasProtected
+    Application.EnableEvents = True
+    If Err.Number <> 0 Then
+        Err.Raise Err.Number, Err.Source, Err.Description
+    End If
 End Sub
 
 Public Sub Back_To_CustomersList()
-    HideCurrentAndGo "ŞÇÆãÉ_ÚãáÇÁ"
+    HideCurrentAndGo SHEET_CUSTOMERS
 End Sub
 
 Public Sub Back_To_CustomerStatement()
-    HideCurrentAndGo "ßÔİ_ÍÓÇÈ_ÇáÚãáÇÁ"
+    HideCurrentAndGo SHEET_CUSTOMER_STATEMENT
 End Sub
 
 Public Sub Go_To_CustomersList()
     On Error GoTo ErrH
 
-    If SheetExists("ŞÇÆãÉ_ÚãáÇÁ") = False Then
-        MsgBox "ÔíÊ ŞÇÆãÉ_ÚãáÇÁ ÛíÑ ãæÌæÏ.", vbExclamation
+    If SheetExists(SHEET_CUSTOMERS) = False Then
+        MsgBox "Ø´ÙŠØª Ù‚Ø§Ø¦Ù…Ø©_Ø¹Ù…Ù„Ø§Ø¡ ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯.", vbExclamation
         Exit Sub
     End If
 
     Application.EnableEvents = False
 
-    ThisWorkbook.Worksheets("ŞÇÆãÉ_ÚãáÇÁ").Activate
+    ThisWorkbook.Worksheets(SHEET_CUSTOMERS).Activate
 
 CleanExit:
     Application.EnableEvents = True
@@ -219,6 +239,6 @@ CleanExit:
 
 ErrH:
     Application.EnableEvents = True
-    MsgBox "ÍÏË ÎØÃ ÃËäÇÁ ÇáÇäÊŞÇá Åáì ŞÇÆãÉ ÇáÚãáÇÁ.", vbCritical
+    MsgBox "Ø­Ø¯Ø« Ø®Ø·Ø£ Ø£Ø«Ù†Ø§Ø¡ Ø§Ù„Ø§Ù†ØªÙ‚Ø§Ù„ Ø¥Ù„Ù‰ Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡.", vbCritical
 End Sub
 

@@ -2,22 +2,20 @@ Attribute VB_Name = "Module2"
 Option Explicit
 
 '=========================
-' ßáãÉ ãÑæÑ ÇáÅÏÇÑÉ (æÇÍÏÉ İŞØ)
+' ÙƒÙ„Ù…Ø© Ù…Ø±ÙˆØ± Ø§Ù„Ø¥Ø¯Ø§Ø±Ø© (ÙˆØ§Ø­Ø¯Ø© ÙÙ‚Ø·)
 '=========================
 ' Public Const ADMIN_PWD As String = "mina2040"
     
 
-'Flag áãäÚ ÑÓÇÆá/ÃÍÏÇË ÃËäÇÁ ÇáÊİÑíÛ
+'Flag Ù„Ù…Ù†Ø¹ Ø±Ø³Ø§Ø¦Ù„/Ø£Ø­Ø¯Ø§Ø« Ø£Ø«Ù†Ø§Ø¡ Ø§Ù„ØªÙØ±ÙŠØº
 Public IsClearingInvoice As Boolean
 
-'=========================
-' äØÇŞÇÊ ÇáÓãÇÍ ÈÇáßÊÇÈÉ
-'=========================
-Private Const INVOICE_UNLOCK As String = "B2,F2,I2,B3:J3,C7:C31,D7:E31,F7:F31,G7:G31,I7:I31"
-Private Const KASHF_UNLOCK As String = "B2"
+ '=========================
+ ' Ù†Ø·Ø§Ù‚Ø§Øª Ø§Ù„Ø³Ù…Ø§Ø­ Ø¨Ø§Ù„ÙƒØªØ§Ø¨Ø©
+ '=========================
 
 '=========================
-' Şİá ÇáÍãÇíÉ (ááÅÏÇÑÉ)
+' Ù‚ÙÙ„ Ø§Ù„Ø­Ù…Ø§ÙŠØ© (Ù„Ù„Ø¥Ø¯Ø§Ø±Ø©)
 '=========================
 Public Sub Lock_All()
     AdminMode = False
@@ -36,12 +34,12 @@ Public Sub Lock_All()
     Application.EnableEvents = True
     Application.ScreenUpdating = True
 
-    MsgBox "Êã Şİá ÇáÍãÇíÉ ÈäÌÇÍ", vbInformation
+    MsgBox "ØªÙ… Ù‚ÙÙ„ Ø§Ù„Ø­Ù…Ø§ÙŠØ© Ø¨Ù†Ø¬Ø§Ø­", vbInformation
 End Sub
 
 
 '=========================
-' İÊÍ ÇáÍãÇíÉ (ááÅÏÇÑÉ) - ÈÇÓÊÎÏÇã UserForm1
+' ÙØªØ­ Ø§Ù„Ø­Ù…Ø§ÙŠØ© (Ù„Ù„Ø¥Ø¯Ø§Ø±Ø©) - Ø¨Ø§Ø³ØªØ®Ø¯Ø§Ù… UserForm1
 '=========================
 Public Sub Unlock_All()
     Dim frm As UserForm1
@@ -51,7 +49,7 @@ Public Sub Unlock_All()
     If frm.IsOk = False Then Exit Sub
 
     If frm.EnteredPassword <> ADMIN_PWD Then
-        MsgBox "ßáãÉ ÇáãÑæÑ ÛíÑ ÕÍíÍÉ", vbCritical
+        MsgBox "ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± ØºÙŠØ± ØµØ­ÙŠØ­Ø©", vbCritical
         Exit Sub
     End If
 
@@ -60,152 +58,169 @@ Public Sub Unlock_All()
     Application.ScreenUpdating = False
     Application.EnableEvents = False
 
-    On Error Resume Next
-    ThisWorkbook.Unprotect Password:=ADMIN_PWD
-    On Error GoTo 0
+    Call TryUnprotectWorkbook
 
-    UnprotectSheet "ÅÏÎÇá_İÇÊæÑÉ"
-    UnprotectSheet "ßÔİ_ÍÓÇÈ_ÇáÚãáÇÁ"
-    UnprotectSheet "ŞÇÆãÉ_ÚãáÇÁ"
-    UnprotectSheet "_ŞÇáÈ_Úãíá"
+    TryUnprotectSheet ThisWorkbook.Worksheets(SHEET_INVOICE)
+    TryUnprotectSheet ThisWorkbook.Worksheets(SHEET_CUSTOMER_STATEMENT)
+    TryUnprotectSheet ThisWorkbook.Worksheets(SHEET_CUSTOMERS)
+    TryUnprotectSheet ThisWorkbook.Worksheets(SHEET_TEMPLATE)
 
     UnprotectCustomerSheets
 
     Application.EnableEvents = True
     Application.ScreenUpdating = True
 
-    MsgBox "Êã İÊÍ ÇáÍãÇíÉ (æÖÚ ÇáÅÏÇÑÉ) ÈäÌÇÍ", vbInformation
+    MsgBox "ØªÙ… ÙØªØ­ Ø§Ù„Ø­Ù…Ø§ÙŠØ© (ÙˆØ¶Ø¹ Ø§Ù„Ø¥Ø¯Ø§Ø±Ø©) Ø¨Ù†Ø¬Ø§Ø­", vbInformation
 End Sub
 
 '====================================================
-' ÍãÇíÉ ÔíÊ ÅÏÎÇá_İÇÊæÑÉ (ÇáÓãÇÍ ÈÇáÅÏÎÇá İŞØ)
+' Ø­Ù…Ø§ÙŠØ© Ø´ÙŠØª Ø¥Ø¯Ø®Ø§Ù„_ÙØ§ØªÙˆØ±Ø© (Ø§Ù„Ø³Ù…Ø§Ø­ Ø¨Ø§Ù„Ø¥Ø¯Ø®Ø§Ù„ ÙÙ‚Ø·)
 '====================================================
 Private Sub ProtectInvoiceSheet(ByVal doProtect As Boolean)
     Dim ws As Worksheet
     On Error Resume Next
-    Set ws = ThisWorkbook.Worksheets("ÅÏÎÇá_İÇÊæÑÉ")
+    Set ws = ThisWorkbook.Worksheets(SHEET_INVOICE)
     On Error GoTo 0
     If ws Is Nothing Then Exit Sub
 
     If doProtect Then
-        ws.Unprotect Password:=ADMIN_PWD
+        On Error GoTo CleanExit
+        Call TryUnprotectSheet(ws)
 
         ws.Cells.Locked = True
-        ws.Range(INVOICE_UNLOCK).Locked = False
+        ws.Range(RANGE_INVOICE_UNLOCK).Locked = False
 
         ws.Protect Password:=ADMIN_PWD, UserInterfaceOnly:=True, AllowFiltering:=True, AllowSorting:=True
         ws.EnableSelection = xlUnlockedCells
     End If
+    Exit Sub
+
+CleanExit:
+    RestoreProtectSheet ws, True, True, True
 End Sub
 
 '====================================================
-' ÍãÇíÉ ÔíÊ ßÔİ_ÍÓÇÈ_ÇáÚãáÇÁ
+' Ø­Ù…Ø§ÙŠØ© Ø´ÙŠØª ÙƒØ´Ù_Ø­Ø³Ø§Ø¨_Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡
 '====================================================
 Private Sub ProtectKashfSheet(ByVal doProtect As Boolean)
     Dim ws As Worksheet
     On Error Resume Next
-    Set ws = ThisWorkbook.Worksheets("ßÔİ_ÍÓÇÈ_ÇáÚãáÇÁ")
+    Set ws = ThisWorkbook.Worksheets(SHEET_CUSTOMER_STATEMENT)
     On Error GoTo 0
     If ws Is Nothing Then Exit Sub
 
     If doProtect Then
-        ws.Unprotect Password:=ADMIN_PWD
+        On Error GoTo CleanExit
+        Call TryUnprotectSheet(ws)
 
         ws.Cells.Locked = True
-        ws.Range(KASHF_UNLOCK).Locked = False
+        ws.Range(RANGE_KASHF_UNLOCK).Locked = False
 
         ws.Protect Password:=ADMIN_PWD, UserInterfaceOnly:=True
         ws.EnableSelection = xlUnlockedCells
     End If
+    Exit Sub
+
+CleanExit:
+    RestoreProtectSheet ws, True
 End Sub
 
 '====================================================
-' ÍãÇíÉ ÔíÊ ŞÇÆãÉ_ÚãáÇÁ (ÇáÓãÇÍ ÈÇáßÊÇÈÉ İí A İŞØ)
+' Ø­Ù…Ø§ÙŠØ© Ø´ÙŠØª Ù‚Ø§Ø¦Ù…Ø©_Ø¹Ù…Ù„Ø§Ø¡ (Ø§Ù„Ø³Ù…Ø§Ø­ Ø¨Ø§Ù„ÙƒØªØ§Ø¨Ø© ÙÙŠ A ÙÙ‚Ø·)
 '====================================================
 Private Sub ProtectCustomersSheet(ByVal doProtect As Boolean)
     Dim ws As Worksheet
     On Error Resume Next
-    Set ws = ThisWorkbook.Worksheets("ŞÇÆãÉ_ÚãáÇÁ")
+    Set ws = ThisWorkbook.Worksheets(SHEET_CUSTOMERS)
     On Error GoTo 0
     If ws Is Nothing Then Exit Sub
 
     If doProtect Then
-        ws.Unprotect Password:=ADMIN_PWD
+        On Error GoTo CleanExit
+        Call TryUnprotectSheet(ws)
 
         ws.Cells.Locked = True
-        ws.Range("A2:A10000").Locked = False
+        ws.Range(RANGE_CUSTOMERS_UNLOCK).Locked = False
 
         ws.Protect Password:=ADMIN_PWD, UserInterfaceOnly:=True
         ws.EnableSelection = xlUnlockedCells
     End If
+    Exit Sub
+
+CleanExit:
+    RestoreProtectSheet ws, True
 End Sub
 
 '====================================================
-' ÍãÇíÉ ÔíÊ ÇáŞÇáÈ
+' Ø­Ù…Ø§ÙŠØ© Ø´ÙŠØª Ø§Ù„Ù‚Ø§Ù„Ø¨
 '====================================================
 Private Sub ProtectTemplateSheet(ByVal doProtect As Boolean)
     Dim ws As Worksheet
     On Error Resume Next
-    Set ws = ThisWorkbook.Worksheets("_ŞÇáÈ_Úãíá")
+    Set ws = ThisWorkbook.Worksheets(SHEET_TEMPLATE)
     On Error GoTo 0
     If ws Is Nothing Then Exit Sub
 
     If doProtect Then
-        ws.Unprotect Password:=ADMIN_PWD
+        On Error GoTo CleanExit
+        Call TryUnprotectSheet(ws)
         ws.Cells.Locked = True
         ws.Protect Password:=ADMIN_PWD, UserInterfaceOnly:=True
         ws.EnableSelection = xlUnlockedCells
     End If
+    Exit Sub
+
+CleanExit:
+    RestoreProtectSheet ws, True
 End Sub
 
 '====================================================
-' ÍãÇíÉ ÔíÊÇÊ ÇáÚãáÇÁ (Ãí ÔíÊ ÛíÑ ÇáÃÓÇÓíÉ)
+' Ø­Ù…Ø§ÙŠØ© Ø´ÙŠØªØ§Øª Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡ (Ø£ÙŠ Ø´ÙŠØª ØºÙŠØ± Ø§Ù„Ø£Ø³Ø§Ø³ÙŠØ©)
 '====================================================
 Private Sub ProtectCustomerSheets(ByVal doProtect As Boolean)
     Dim ws As Worksheet
     For Each ws In ThisWorkbook.Worksheets
-        If ws.Name <> "ÅÏÎÇá_İÇÊæÑÉ" _
-           And ws.Name <> "ßÔİ_ÍÓÇÈ_ÇáÚãáÇÁ" _
-           And ws.Name <> "ŞÇÆãÉ_ÚãáÇÁ" _
-           And ws.Name <> "_ŞÇáÈ_Úãíá" Then
+        If ws.Name <> SHEET_INVOICE _
+           And ws.Name <> SHEET_CUSTOMER_STATEMENT _
+           And ws.Name <> SHEET_CUSTOMERS _
+           And ws.Name <> SHEET_TEMPLATE Then
 
             If doProtect Then
-                ws.Unprotect Password:=ADMIN_PWD
+                On Error GoTo CleanExit
+                Call TryUnprotectSheet(ws)
                 ws.Cells.Locked = True
                 ws.Protect Password:=ADMIN_PWD, UserInterfaceOnly:=True
                 ws.EnableSelection = xlUnlockedCells
             End If
         End If
     Next ws
+    Exit Sub
+
+CleanExit:
+    RestoreProtectSheet ws, True
 End Sub
 
 Private Sub UnprotectCustomerSheets()
     Dim ws As Worksheet
     For Each ws In ThisWorkbook.Worksheets
-        If ws.Name <> "ÅÏÎÇá_İÇÊæÑÉ" _
-           And ws.Name <> "ßÔİ_ÍÓÇÈ_ÇáÚãáÇÁ" _
-           And ws.Name <> "ŞÇÆãÉ_ÚãáÇÁ" _
-           And ws.Name <> "_ŞÇáÈ_Úãíá" Then
-            ws.Unprotect Password:=ADMIN_PWD
+        If ws.Name <> SHEET_INVOICE _
+           And ws.Name <> SHEET_CUSTOMER_STATEMENT _
+           And ws.Name <> SHEET_CUSTOMERS _
+           And ws.Name <> SHEET_TEMPLATE Then
+            TryUnprotectSheet ws
         End If
     Next ws
 End Sub
 
-Private Sub UnprotectSheet(ByVal SheetName As String)
-    On Error Resume Next
-    ThisWorkbook.Worksheets(SheetName).Unprotect Password:=ADMIN_PWD
-    On Error GoTo 0
-End Sub
-
 '=========================
-' ÊİÑíÛ ÇáİÇÊæÑÉ ÈÏæä ÍİÙ (ãÚ ÊÃßíÏ)
+' ØªÙØ±ÙŠØº Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ø¨Ø¯ÙˆÙ† Ø­ÙØ¸ (Ù…Ø¹ ØªØ£ÙƒÙŠØ¯)
 '=========================
 Public Sub Clear_Invoice_Without_Save()
 
     Dim wsI As Worksheet
-    Set wsI = ThisWorkbook.Worksheets("ÅÏÎÇá_İÇÊæÑÉ")
+    Set wsI = ThisWorkbook.Worksheets(SHEET_INVOICE)
 
-    If MsgBox("åá ÊÑíÏ ÊİÑíÛ ÇáİÇÊæÑÉ ÈÏæä ÍİÙ¿", vbYesNo + vbQuestion, "ÊÃßíÏ ÇáÊİÑíÛ") = vbNo Then Exit Sub
+    If MsgBox("Ù‡Ù„ ØªØ±ÙŠØ¯ ØªÙØ±ÙŠØº Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ø¨Ø¯ÙˆÙ† Ø­ÙØ¸ØŸ", vbYesNo + vbQuestion, "ØªØ£ÙƒÙŠØ¯ Ø§Ù„ØªÙØ±ÙŠØº") = vbNo Then Exit Sub
 
     On Error GoTo SafeExit
 
@@ -213,24 +228,24 @@ Public Sub Clear_Invoice_Without_Save()
     Application.EnableEvents = False
     Application.ScreenUpdating = False
 
-    'ÊİÑíÛ ÇáÚãíá + ÇáßæãÈæ
-    wsI.Range("B2").ClearContents
+    'ØªÙØ±ÙŠØº Ø§Ù„Ø¹Ù…ÙŠÙ„ + Ø§Ù„ÙƒÙˆÙ…Ø¨Ùˆ
+    wsI.Range(CELL_INVOICE_CUSTOMER).ClearContents
     On Error Resume Next
     wsI.OLEObjects("ComboBox1").Object.Value = ""
     wsI.OLEObjects("ComboBox1").Object.Text = ""
     On Error GoTo SafeExit
 
-    'ÊİÑíÛ ÇáåíÏÑ
-    wsI.Range("F2").ClearContents
-    wsI.Range("I2").ClearContents
-    wsI.Range("B3:J3").ClearContents
+    'ØªÙØ±ÙŠØº Ø§Ù„Ù‡ÙŠØ¯Ø±
+    wsI.Range(CELL_INVOICE_NUMBER).ClearContents
+    wsI.Range(CELL_INVOICE_DATE).ClearContents
+    wsI.Range(RANGE_INVOICE_HEADER).ClearContents
 
-    'ÊİÑíÛ ÈäæÏ ÇáÅÏÎÇá İŞØ (ÈÏæä ãÓÍ ãÚÇÏáÇÊ H æ J)
-    wsI.Range("C7:C31").ClearContents
-    wsI.Range("D7:E31").ClearContents
-    wsI.Range("F7:F31").ClearContents
-    wsI.Range("G7:G31").ClearContents
-    wsI.Range("I7:I31").ClearContents
+    'ØªÙØ±ÙŠØº Ø¨Ù†ÙˆØ¯ Ø§Ù„Ø¥Ø¯Ø®Ø§Ù„ ÙÙ‚Ø· (Ø¨Ø¯ÙˆÙ† Ù…Ø³Ø­ Ù…Ø¹Ø§Ø¯Ù„Ø§Øª H Ùˆ J)
+    wsI.Range(RANGE_INVOICE_ITEMS_C).ClearContents
+    wsI.Range(RANGE_INVOICE_ITEMS_DE).ClearContents
+    wsI.Range(RANGE_INVOICE_ITEMS_F).ClearContents
+    wsI.Range(RANGE_INVOICE_ITEMS_G).ClearContents
+    wsI.Range(RANGE_INVOICE_ITEMS_I).ClearContents
 
 SafeExit:
     Application.EnableEvents = True
@@ -238,11 +253,11 @@ SafeExit:
     IsClearingInvoice = False
 
     If Err.Number <> 0 Then
-        MsgBox "ÍÏË ÎØÃ ÃËäÇÁ ÇáÊİÑíÛ: " & Err.Description, vbExclamation
+        MsgBox "Ø­Ø¯Ø« Ø®Ø·Ø£ Ø£Ø«Ù†Ø§Ø¡ Ø§Ù„ØªÙØ±ÙŠØº: " & Err.Description, vbExclamation
         Exit Sub
     End If
 
-    MsgBox "Êã ÊİÑíÛ ÇáİÇÊæÑÉ ÈäÌÇÍ (ÈÏæä ÍİÙ).", vbInformation, "Êã ÇáÊİÑíÛ"
+    MsgBox "ØªÙ… ØªÙØ±ÙŠØº Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ø¨Ù†Ø¬Ø§Ø­ (Ø¨Ø¯ÙˆÙ† Ø­ÙØ¸).", vbInformation, "ØªÙ… Ø§Ù„ØªÙØ±ÙŠØº"
 End Sub
 
 
@@ -255,23 +270,27 @@ Public Sub HideTempCustomerSheet()
         Exit Sub
     End If
 
-    'İß Structure ãÄŞÊğÇ
-    ThisWorkbook.Unprotect Password:=ADMIN_PWD
+    'ÙÙƒ Structure Ù…Ø¤Ù‚ØªÙ‹Ø§
+    Dim wasProtected As Boolean
+    wasProtected = TryUnprotectWorkbook()
 
-    'ãåã: áÇ íãßä ÅÎİÇÁ ÇáÔíÊ ÇáäÔØ
-    If ActiveSheet.Name = TempOpenedCustomerSheet Then Exit Sub
+    'Ù…Ù‡Ù…: Ù„Ø§ ÙŠÙ…ÙƒÙ† Ø¥Ø®ÙØ§Ø¡ Ø§Ù„Ø´ÙŠØª Ø§Ù„Ù†Ø´Ø·
+    If ActiveSheet.Name = TempOpenedCustomerSheet Then
+        RestoreProtectWorkbook wasProtected
+        Exit Sub
+    End If
 
     ThisWorkbook.Worksheets(TempOpenedCustomerSheet).Visible = xlSheetVeryHidden
     TempOpenedCustomerSheet = ""
 
-    ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
+    RestoreProtectWorkbook wasProtected
     Exit Sub
 
 ErrH:
-    MsgBox "ÎØÃ ÃËäÇÁ ÅÎİÇÁ ÔíÊ ÇáÚãíá:" & vbCrLf & _
+    MsgBox "Ø®Ø·Ø£ Ø£Ø«Ù†Ø§Ø¡ Ø¥Ø®ÙØ§Ø¡ Ø´ÙŠØª Ø§Ù„Ø¹Ù…ÙŠÙ„:" & vbCrLf & _
            Err.Number & " - " & Err.Description, vbCritical
     On Error Resume Next
-    ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
+    RestoreProtectWorkbook wasProtected
 End Sub
 
 
@@ -284,21 +303,25 @@ Public Sub HideTempSummarySheet()
         Exit Sub
     End If
 
-    ThisWorkbook.Unprotect Password:=ADMIN_PWD
+    Dim wasProtected As Boolean
+    wasProtected = TryUnprotectWorkbook()
 
-    If ActiveSheet.Name = TempOpenedSummarySheet Then Exit Sub
+    If ActiveSheet.Name = TempOpenedSummarySheet Then
+        RestoreProtectWorkbook wasProtected
+        Exit Sub
+    End If
 
     ThisWorkbook.Worksheets(TempOpenedSummarySheet).Visible = xlSheetVeryHidden
     TempOpenedSummarySheet = ""
 
-    ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
+    RestoreProtectWorkbook wasProtected
     Exit Sub
 
 ErrH:
-    MsgBox "ÎØÃ ÃËäÇÁ ÅÎİÇÁ ÔíÊ ÇáÅÌãÇáíÇÊ:" & vbCrLf & _
+    MsgBox "Ø®Ø·Ø£ Ø£Ø«Ù†Ø§Ø¡ Ø¥Ø®ÙØ§Ø¡ Ø´ÙŠØª Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠØ§Øª:" & vbCrLf & _
            Err.Number & " - " & Err.Description, vbCritical
     On Error Resume Next
-    ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
+    RestoreProtectWorkbook wasProtected
 End Sub
 
 

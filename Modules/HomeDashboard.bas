@@ -1,56 +1,54 @@
 Attribute VB_Name = "HomeDashboard"
 Option Explicit
 
-Public Const HOME_SHEET As String = "ÇáÑÆíÓíÉ"
-
 '==============================
-' ÊÔÛíá ãÑÉ æÇÍÏÉ áÅäÔÇÁ ÇáÑÆíÓíÉ + ÇáÃÒÑÇÑ + ÅÎİÇÁ ÈÇŞí ÇáÔíÊÇÊ
+' ØªØ´ØºÙŠÙ„ Ù…Ø±Ø© ÙˆØ§Ø­Ø¯Ø© Ù„Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ© + Ø§Ù„Ø£Ø²Ø±Ø§Ø± + Ø¥Ø®ÙØ§Ø¡ Ø¨Ø§Ù‚ÙŠ Ø§Ù„Ø´ÙŠØªØ§Øª
 '==============================
 Public Sub Setup_Home_Dashboard()
     Dim wsHome As Worksheet
 
-    'ÅäÔÇÁ/ÊÌåíÒ ÔíÊ ÇáÑÆíÓíÉ
+    'Ø¥Ù†Ø´Ø§Ø¡/ØªØ¬Ù‡ÙŠØ² Ø´ÙŠØª Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©
     Set wsHome = GetOrCreateHomeSheet
 
-    'ÇãÓÍ ÃÒÑÇÑ ŞÏíãÉ ÈÇáÔíÊ ÇáÑÆíÓíÉ (ÇÎÊíÇÑí)
+    'Ø§Ù…Ø³Ø­ Ø£Ø²Ø±Ø§Ø± Ù‚Ø¯ÙŠÙ…Ø© Ø¨Ø§Ù„Ø´ÙŠØª Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ© (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)
     DeleteAllShapes wsHome
 
-    'ÅäÔÇÁ ÇáÃÒÑÇÑ (Shapes) İí ÇáÔíÊ ÇáÑÆíÓíÉ
-    AddHomeButton wsHome, "İÇÊæÑÉ ãÈíÚÇÊ", "Go_Invoice", 30, 40, 220, 40
-    AddHomeButton wsHome, "ŞÇÆãÉ ÇáÚãáÇÁ", "Go_CustomersList", 30, 90, 220, 40
-    AddHomeButton wsHome, "ÅÖÇİÉ Úãíá", "Go_AddCustomer", 30, 140, 220, 40
-    AddHomeButton wsHome, "ßÔİ ÍÓÇÈ Úãíá", "Go_Kashf", 30, 190, 220, 40
-    AddHomeButton wsHome, "ÅÌãÇáí ÇáãÈíÚÇÊ", "Go_TotalSales", 30, 240, 220, 40
-    AddHomeButton wsHome, "ãáÎÕ ÍÓÇÈÇÊ ÇáÚãáÇÁ", "Go_AccountsSummary", 30, 290, 220, 40
+    'Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„Ø£Ø²Ø±Ø§Ø± (Shapes) ÙÙŠ Ø§Ù„Ø´ÙŠØª Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©
+    AddHomeButton wsHome, "ÙØ§ØªÙˆØ±Ø© Ù…Ø¨ÙŠØ¹Ø§Øª", "Go_Invoice", 30, 40, 220, 40
+    AddHomeButton wsHome, "Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡", "Go_CustomersList", 30, 90, 220, 40
+    AddHomeButton wsHome, "Ø¥Ø¶Ø§ÙØ© Ø¹Ù…ÙŠÙ„", "Go_AddCustomer", 30, 140, 220, 40
+    AddHomeButton wsHome, "ÙƒØ´Ù Ø­Ø³Ø§Ø¨ Ø¹Ù…ÙŠÙ„", "Go_Kashf", 30, 190, 220, 40
+    AddHomeButton wsHome, "Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù…Ø¨ÙŠØ¹Ø§Øª", "Go_TotalSales", 30, 240, 220, 40
+    AddHomeButton wsHome, "Ù…Ù„Ø®Øµ Ø­Ø³Ø§Ø¨Ø§Øª Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡", "Go_AccountsSummary", 30, 290, 220, 40
 
-    'ÇÎÊíÇÑí: Şİá/İÊÍ ÇáÍãÇíÉ ãä ÇáÑÆíÓíÉ
-    AddHomeButton wsHome, "Şİá Çáãáİ", "Lock_All", 280, 40, 220, 40
-    AddHomeButton wsHome, "İÊÍ Çáãáİ", "Unlock_All", 280, 90, 220, 40
+    'Ø§Ø®ØªÙŠØ§Ø±ÙŠ: Ù‚ÙÙ„/ÙØªØ­ Ø§Ù„Ø­Ù…Ø§ÙŠØ© Ù…Ù† Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©
+    AddHomeButton wsHome, "Ù‚ÙÙ„ Ø§Ù„Ù…Ù„Ù", "Lock_All", 280, 40, 220, 40
+    AddHomeButton wsHome, "ÙØªØ­ Ø§Ù„Ù…Ù„Ù", "Unlock_All", 280, 90, 220, 40
 
-    'ÅÎİÇÁ ßá ÇáÔíÊÇÊ ãÇ ÚÏÇ ÇáÑÆíÓíÉ
+    'Ø¥Ø®ÙØ§Ø¡ ÙƒÙ„ Ø§Ù„Ø´ÙŠØªØ§Øª Ù…Ø§ Ø¹Ø¯Ø§ Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©
     HideAllSheetsExceptHome
 
-    'ÅÖÇİÉ ÒÑ ÑÌæÚ áßá ÇáÔíÊÇÊ
+    'Ø¥Ø¶Ø§ÙØ© Ø²Ø± Ø±Ø¬ÙˆØ¹ Ù„ÙƒÙ„ Ø§Ù„Ø´ÙŠØªØ§Øª
     AddBackButtonToAllSheets
 
     wsHome.Activate
-    MsgBox "? Êã ÊÌåíÒ ÔíÊ ÇáÑÆíÓíÉ æÅÎİÇÁ ÈÇŞí ÇáÔíÊÇÊ + ÅÖÇİÉ ÒÑ ÇáÑÌæÚ.", vbInformation
+    MsgBox "? ØªÙ… ØªØ¬Ù‡ÙŠØ² Ø´ÙŠØª Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ© ÙˆØ¥Ø®ÙØ§Ø¡ Ø¨Ø§Ù‚ÙŠ Ø§Ù„Ø´ÙŠØªØ§Øª + Ø¥Ø¶Ø§ÙØ© Ø²Ø± Ø§Ù„Ø±Ø¬ÙˆØ¹.", vbInformation
 End Sub
 
 '==============================
-' ÃÒÑÇÑ ÇáÑÆíÓíÉ (ÊİÊÍ ÇáÔíÊ ÇáãØáæÈ)
+' Ø£Ø²Ø±Ø§Ø± Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ© (ØªÙØªØ­ Ø§Ù„Ø´ÙŠØª Ø§Ù„Ù…Ø·Ù„ÙˆØ¨)
 '==============================
 Public Sub Go_Invoice()
-    ShowOnlySheet "ÅÏÎÇá_İÇÊæÑÉ"
+    ShowOnlySheet SHEET_INVOICE
 End Sub
 
 Public Sub Go_CustomersList()
-    ShowOnlySheet "ŞÇÆãÉ_ÚãáÇÁ"
+    ShowOnlySheet SHEET_CUSTOMERS
 End Sub
 
 
 '========================================
-' ÅÖÇİÉ Úãíá ÌÏíÏ ÈÇáÇÓã + ÊÍÏíË ÇáãáÎÕ + ÇáÑÌæÚ ááÑÆíÓíÉ
+' Ø¥Ø¶Ø§ÙØ© Ø¹Ù…ÙŠÙ„ Ø¬Ø¯ÙŠØ¯ Ø¨Ø§Ù„Ø§Ø³Ù… + ØªØ­Ø¯ÙŠØ« Ø§Ù„Ù…Ù„Ø®Øµ + Ø§Ù„Ø±Ø¬ÙˆØ¹ Ù„Ù„Ø±Ø¦ÙŠØ³ÙŠØ©
 '========================================
 Public Sub Add_New_Customer_ByName(ByVal newName As String)
 
@@ -63,61 +61,61 @@ Public Sub Add_New_Customer_ByName(ByVal newName As String)
     newName = Trim(newName)
     If newName = "" Then Exit Sub
 
-    Set ws = ThisWorkbook.Worksheets("ŞÇÆãÉ_ÚãáÇÁ")
+    Set ws = ThisWorkbook.Worksheets(SHEET_CUSTOMERS)
 
     nm = SafeSheetName(newName)
     If nm = "" Then
-        MsgBox "ÇÓã ÇáÚãíá ÛíÑ ÕÇáÍ.", vbExclamation
+        MsgBox "Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„ ØºÙŠØ± ØµØ§Ù„Ø­.", vbExclamation
         Exit Sub
     End If
 
     If CustomerExistsInList(newName) Then
-        MsgBox "åĞÇ ÇáÚãíá ãæÌæÏ ÈÇáİÚá İí ÇáŞÇÆãÉ.", vbExclamation
+        MsgBox "Ù‡Ø°Ø§ Ø§Ù„Ø¹Ù…ÙŠÙ„ Ù…ÙˆØ¬ÙˆØ¯ Ø¨Ø§Ù„ÙØ¹Ù„ ÙÙŠ Ø§Ù„Ù‚Ø§Ø¦Ù…Ø©.", vbExclamation
         Exit Sub
     End If
 
     If SheetExists(nm) Then
-        MsgBox "íæÌÏ ÔíÊ ÈäİÓ ÇÓã ÇáÚãíá ÈÇáİÚá.", vbExclamation
+        MsgBox "ÙŠÙˆØ¬Ø¯ Ø´ÙŠØª Ø¨Ù†ÙØ³ Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„ Ø¨Ø§Ù„ÙØ¹Ù„.", vbExclamation
         Exit Sub
     End If
 
-    '? ãäÚ ÊÔÛíá Worksheet_Change ÃËäÇÁ ÇáÅÖÇİÉ ãä ÇáŞÇÆãÉ ÇáÑÆíÓíÉ
+    '? Ù…Ù†Ø¹ ØªØ´ØºÙŠÙ„ Worksheet_Change Ø£Ø«Ù†Ø§Ø¡ Ø§Ù„Ø¥Ø¶Ø§ÙØ© Ù…Ù† Ø§Ù„Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©
     IsAddingCustomerFromMenu = True
     Application.EnableEvents = False
 
-    'Ãæá Õİ İÇÖí
+    'Ø£ÙˆÙ„ ØµÙ ÙØ§Ø¶ÙŠ
     lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row + 1
     If lastRow < 2 Then lastRow = 2
 
-    'ÅÖÇİÉ ÇáÇÓã
+    'Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø§Ø³Ù…
     ws.Cells(lastRow, "A").Value = newName
 
-    'ÅäÔÇÁ ÔíÊ ÇáÚãíá (ãÎİí VeryHidden)
+    'Ø¥Ù†Ø´Ø§Ø¡ Ø´ÙŠØª Ø§Ù„Ø¹Ù…ÙŠÙ„ (Ù…Ø®ÙÙŠ VeryHidden)
     CreateCustomerSheet nm
 
-    'ÊÓÌíá ÇÓã ÇáÔíÊ İí C
+    'ØªØ³Ø¬ÙŠÙ„ Ø§Ø³Ù… Ø§Ù„Ø´ÙŠØª ÙÙŠ C
     ws.Cells(lastRow, "C").Value = nm
 
 CleanExit:
     Application.EnableEvents = True
     IsAddingCustomerFromMenu = False
 
-    MsgBox "? ÊãÊ ÅÖÇİÉ ÇáÚãíá æÅäÔÇÁ ÇáÔíÊ ÈäÌÇÍ: " & newName, vbInformation
+    MsgBox "? ØªÙ…Øª Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø¹Ù…ÙŠÙ„ ÙˆØ¥Ù†Ø´Ø§Ø¡ Ø§Ù„Ø´ÙŠØª Ø¨Ù†Ø¬Ø§Ø­: " & newName, vbInformation
     Exit Sub
 
 ErrH:
     Application.EnableEvents = True
     IsAddingCustomerFromMenu = False
-    MsgBox "ÍÏË ÎØÃ ÃËäÇÁ ÅÖÇİÉ ÇáÚãíá: " & Err.Description, vbExclamation
+    MsgBox "Ø­Ø¯Ø« Ø®Ø·Ø£ Ø£Ø«Ù†Ø§Ø¡ Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø¹Ù…ÙŠÙ„: " & Err.Description, vbExclamation
 End Sub
     
 
 '========================================
-' ÒÑ ÅÖÇİÉ Úãíá ãä ÇáÔíÊ ÇáÑÆíÓí (InputBox)
+' Ø²Ø± Ø¥Ø¶Ø§ÙØ© Ø¹Ù…ÙŠÙ„ Ù…Ù† Ø§Ù„Ø´ÙŠØª Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠ (InputBox)
 '========================================
 Public Sub Go_AddCustomer()
     Dim nm As String
-    nm = InputBox("ÇßÊÈ ÇÓã ÇáÚãíá ÇáÌÏíÏ:", "ÅÖÇİÉ Úãíá")
+    nm = InputBox("Ø§ÙƒØªØ¨ Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„ Ø§Ù„Ø¬Ø¯ÙŠØ¯:", "Ø¥Ø¶Ø§ÙØ© Ø¹Ù…ÙŠÙ„")
     nm = Trim(nm)
     If nm = "" Then Exit Sub
 
@@ -127,11 +125,11 @@ End Sub
 
 
 Public Sub Go_Kashf()
-    ShowOnlySheet "ßÔİ_ÍÓÇÈ_ÇáÚãáÇÁ"
+    ShowOnlySheet SHEET_CUSTOMER_STATEMENT
 End Sub
 
 Public Sub Go_TotalSales()
-    'áæ ÃäÊ ÚÇãá İÊÍ ÈÇáÈÇÓæÑÏ + ÅÎİÇÁ ÊáŞÇÆí: ÇÓÊÎÏã ÇáãÇßÑæ ÇáãæÌæÏ ÚäÏß
+    'Ù„Ùˆ Ø£Ù†Øª Ø¹Ø§Ù…Ù„ ÙØªØ­ Ø¨Ø§Ù„Ø¨Ø§Ø³ÙˆØ±Ø¯ + Ø¥Ø®ÙØ§Ø¡ ØªÙ„Ù‚Ø§Ø¦ÙŠ: Ø§Ø³ØªØ®Ø¯Ù… Ø§Ù„Ù…Ø§ÙƒØ±Ùˆ Ø§Ù„Ù…ÙˆØ¬ÙˆØ¯ Ø¹Ù†Ø¯Ùƒ
     Open_TotalSales_Sheet
 End Sub
 
@@ -140,28 +138,35 @@ Public Sub Go_AccountsSummary()
 End Sub
 
 '==============================
-' ÒÑ ÇáÑÌæÚ (íÙåÑ ÇáÑÆíÓíÉ æíÎİí ÇáÔíÊ ÇáÍÇáí)
+' Ø²Ø± Ø§Ù„Ø±Ø¬ÙˆØ¹ (ÙŠØ¸Ù‡Ø± Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ© ÙˆÙŠØ®ÙÙŠ Ø§Ù„Ø´ÙŠØª Ø§Ù„Ø­Ø§Ù„ÙŠ)
 '==============================
 Public Sub Back_To_Home()
     Dim wsCur As Worksheet
+    Dim wasProtected As Boolean
     Set wsCur = ActiveSheet
 
-    'áÇ ÊÎİö ÇáÑÆíÓíÉ
-    If wsCur.Name <> HOME_SHEET Then
-        On Error Resume Next
-        ThisWorkbook.Unprotect Password:=ADMIN_PWD
+    'Ù„Ø§ ØªØ®ÙÙ Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©
+    If wsCur.Name <> SHEET_HOME Then
+        On Error GoTo CleanExit
+        wasProtected = TryUnprotectWorkbook()
         wsCur.Visible = xlSheetVeryHidden
-        ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
-        On Error GoTo 0
+        RestoreProtectWorkbook wasProtected
     End If
 
-    'ÇÙåÑ ÇáÑÆíÓíÉ İŞØ
+    'Ø§Ø¸Ù‡Ø± Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ© ÙÙ‚Ø·
     HideAllSheetsExceptHome
-    ThisWorkbook.Worksheets(HOME_SHEET).Activate
+    ThisWorkbook.Worksheets(SHEET_HOME).Activate
+    Exit Sub
+
+CleanExit:
+    RestoreProtectWorkbook wasProtected
+    If Err.Number <> 0 Then
+        Err.Raise Err.Number, Err.Source, Err.Description
+    End If
 End Sub
 
 '==============================
-' ÅÙåÇÑ ÔíÊ æÇÍÏ İŞØ (æíÎİí ÈÇŞí ÇáÔíÊÇÊ)
+' Ø¥Ø¸Ù‡Ø§Ø± Ø´ÙŠØª ÙˆØ§Ø­Ø¯ ÙÙ‚Ø· (ÙˆÙŠØ®ÙÙŠ Ø¨Ø§Ù‚ÙŠ Ø§Ù„Ø´ÙŠØªØ§Øª)
 '==============================
 Public Sub ShowOnlySheet(ByVal SheetName As String)
 
@@ -169,87 +174,97 @@ Public Sub ShowOnlySheet(ByVal SheetName As String)
     Dim wasProtected As Boolean
 
     If SheetExists(SheetName) = False Then
-        MsgBox "ÇáÔíÊ ÛíÑ ãæÌæÏ: " & SheetName, vbExclamation
+        MsgBox "Ø§Ù„Ø´ÙŠØª ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯: " & SheetName, vbExclamation
         Exit Sub
     End If
 
     Application.EnableEvents = False
+    On Error GoTo CleanExit
 
-    'åá Structure ãŞİæáÉ¿
-    wasProtected = ThisWorkbook.ProtectStructure
+    'Ù‡Ù„ Structure Ù…Ù‚ÙÙˆÙ„Ø©ØŸ
+    wasProtected = TryUnprotectWorkbook()
 
-    'İß ÇáŞİá ãÄŞÊğÇ
+    'ÙÙƒ Ø§Ù„Ù‚ÙÙ„ Ù…Ø¤Ù‚ØªÙ‹Ø§
     If wasProtected Then
-        ThisWorkbook.Unprotect Password:=ADMIN_PWD
-
-        'ÊÃßÏ İÚáíğÇ ÃäåÇ ÇÊİßÊ
+        'ØªØ£ÙƒØ¯ ÙØ¹Ù„ÙŠÙ‹Ø§ Ø£Ù†Ù‡Ø§ Ø§ØªÙÙƒØª
         If ThisWorkbook.ProtectStructure Then
             Application.EnableEvents = True
-            MsgBox "áÇ íãßä ÊÛííÑ ÅÙåÇÑ/ÅÎİÇÁ ÇáÔíÊÇÊ áÃä ÈäíÉ ÇáãÕäİ ãÇ ÒÇáÊ ãÍãíÉ." & vbCrLf & _
-                   "ÊÃßÏ ãä ßáãÉ ÇáãÑæÑ Ãæ áÇ íæÌÏ Şİá íÏæí ÈßáãÉ ÃÎÑì.", vbCritical
+            MsgBox "Ù„Ø§ ÙŠÙ…ÙƒÙ† ØªØºÙŠÙŠØ± Ø¥Ø¸Ù‡Ø§Ø±/Ø¥Ø®ÙØ§Ø¡ Ø§Ù„Ø´ÙŠØªØ§Øª Ù„Ø£Ù† Ø¨Ù†ÙŠØ© Ø§Ù„Ù…ØµÙ†Ù Ù…Ø§ Ø²Ø§Ù„Øª Ù…Ø­Ù…ÙŠØ©." & vbCrLf & _
+                   "ØªØ£ÙƒØ¯ Ù…Ù† ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± Ø£Ùˆ Ù„Ø§ ÙŠÙˆØ¬Ø¯ Ù‚ÙÙ„ ÙŠØ¯ÙˆÙŠ Ø¨ÙƒÙ„Ù…Ø© Ø£Ø®Ø±Ù‰.", vbCritical
             Exit Sub
         End If
     End If
 
-    'ÃÙåÑ ÇáÔíÊ ÇáãØáæÈ
+    'Ø£Ø¸Ù‡Ø± Ø§Ù„Ø´ÙŠØª Ø§Ù„Ù…Ø·Ù„ÙˆØ¨
     ThisWorkbook.Worksheets(SheetName).Visible = xlSheetVisible
 
-    'İÚøáå ÃæáÇğ ÍÊì áÇ ÊÍÇæá ÅÎİÇÁ ÇáÔíÊ ÇáäÔØ ÈÇáÛáØ
+    'ÙØ¹Ù‘Ù„Ù‡ Ø£ÙˆÙ„Ø§Ù‹ Ø­ØªÙ‰ Ù„Ø§ ØªØ­Ø§ÙˆÙ„ Ø¥Ø®ÙØ§Ø¡ Ø§Ù„Ø´ÙŠØª Ø§Ù„Ù†Ø´Ø· Ø¨Ø§Ù„ØºÙ„Ø·
     ThisWorkbook.Worksheets(SheetName).Activate
 
-    'ÇÎİö ÈÇŞí ÇáÔíÊÇÊ (áÇ ÊÎİö ÇáÔíÊ ÇáäÔØ)
+    'Ø§Ø®ÙÙ Ø¨Ø§Ù‚ÙŠ Ø§Ù„Ø´ÙŠØªØ§Øª (Ù„Ø§ ØªØ®ÙÙ Ø§Ù„Ø´ÙŠØª Ø§Ù„Ù†Ø´Ø·)
     For Each ws In ThisWorkbook.Worksheets
         If ws.Name <> SheetName Then
             ws.Visible = xlSheetVeryHidden
         End If
     Next ws
 
-    'ÅÚÇÏÉ ÇáŞİá
-    If wasProtected Then
-        ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
-    End If
+    'Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ù‚ÙÙ„
+    RestoreProtectWorkbook wasProtected
 
     Application.EnableEvents = True
+    Exit Sub
+
+CleanExit:
+    RestoreProtectWorkbook wasProtected
+    Application.EnableEvents = True
+    If Err.Number <> 0 Then
+        Err.Raise Err.Number, Err.Source, Err.Description
+    End If
 End Sub
 
 
 '==============================
-' ÅÎİÇÁ ßá ÇáÔíÊÇÊ ãÇ ÚÏÇ ÇáÑÆíÓíÉ
+' Ø¥Ø®ÙØ§Ø¡ ÙƒÙ„ Ø§Ù„Ø´ÙŠØªØ§Øª Ù…Ø§ Ø¹Ø¯Ø§ Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©
 '==============================
 Public Sub HideAllSheetsExceptHome()
     Dim ws As Worksheet
+    Dim wasProtected As Boolean
 
-    On Error Resume Next
-    ThisWorkbook.Unprotect Password:=ADMIN_PWD
-    On Error GoTo 0
+    On Error GoTo CleanExit
+    wasProtected = TryUnprotectWorkbook()
 
     For Each ws In ThisWorkbook.Worksheets
-        If ws.Name = HOME_SHEET Then
+        If ws.Name = SHEET_HOME Then
             ws.Visible = xlSheetVisible
         Else
             ws.Visible = xlSheetVeryHidden
         End If
     Next ws
 
-    On Error Resume Next
-    ThisWorkbook.Protect Password:=ADMIN_PWD, Structure:=True, Windows:=False
-    On Error GoTo 0
+    RestoreProtectWorkbook wasProtected
+    Exit Sub
+
+CleanExit:
+    RestoreProtectWorkbook wasProtected
+    If Err.Number <> 0 Then
+        Err.Raise Err.Number, Err.Source, Err.Description
+    End If
 End Sub
 
 '==============================
-' ÅÖÇİÉ ÒÑ ÑÌæÚ ááÑÆíÓíÉ İí ßá ÇáÔíÊÇÊ (ÍÊì áÇ ÊÊæå)
+' Ø¥Ø¶Ø§ÙØ© Ø²Ø± Ø±Ø¬ÙˆØ¹ Ù„Ù„Ø±Ø¦ÙŠØ³ÙŠØ© ÙÙŠ ÙƒÙ„ Ø§Ù„Ø´ÙŠØªØ§Øª (Ø­ØªÙ‰ Ù„Ø§ ØªØªÙˆÙ‡)
 '==============================
 Public Sub AddBackButtonToAllSheets()
     Dim ws As Worksheet
     For Each ws In ThisWorkbook.Worksheets
-        If ws.Name <> HOME_SHEET Then
+        If ws.Name <> SHEET_HOME Then
             AddBackButton ws
         End If
     Next ws
 End Sub
 
 Private Sub AddBackButton(ByVal ws As Worksheet)
-    'íÍĞİ ÒÑ ÑÌæÚ ŞÏíã Ëã íÖíİ ÌÏíÏ
+    'ÙŠØ­Ø°Ù Ø²Ø± Ø±Ø¬ÙˆØ¹ Ù‚Ø¯ÙŠÙ… Ø«Ù… ÙŠØ¶ÙŠÙ Ø¬Ø¯ÙŠØ¯
     On Error Resume Next
     ws.Shapes("btnBackHome").Delete
     On Error GoTo 0
@@ -257,28 +272,28 @@ Private Sub AddBackButton(ByVal ws As Worksheet)
     Dim shp As Shape
     Set shp = ws.Shapes.AddShape(msoShapeRoundedRectangle, 10, 10, 160, 32)
     shp.Name = "btnBackHome"
-    shp.TextFrame2.TextRange.Text = "? ÑÌæÚ ááÑÆíÓíÉ"
+    shp.TextFrame2.TextRange.Text = "? Ø±Ø¬ÙˆØ¹ Ù„Ù„Ø±Ø¦ÙŠØ³ÙŠØ©"
     shp.TextFrame2.TextRange.Font.Size = 12
     shp.TextFrame2.TextRange.Font.Bold = msoTrue
     shp.OnAction = "Back_To_Home"
 End Sub
 
 '==============================
-' ÃÏæÇÊ ãÓÇÚÏÉ ááÔíÊ ÇáÑÆíÓíÉ
+' Ø£Ø¯ÙˆØ§Øª Ù…Ø³Ø§Ø¹Ø¯Ø© Ù„Ù„Ø´ÙŠØª Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©
 '==============================
 Private Function GetOrCreateHomeSheet() As Worksheet
     Dim ws As Worksheet
     On Error Resume Next
-    Set ws = ThisWorkbook.Worksheets(HOME_SHEET)
+    Set ws = ThisWorkbook.Worksheets(SHEET_HOME)
     On Error GoTo 0
 
     If ws Is Nothing Then
         Set ws = ThisWorkbook.Worksheets.Add(Before:=ThisWorkbook.Sheets(1))
-        ws.Name = HOME_SHEET
+        ws.Name = SHEET_HOME
     End If
 
     ws.Cells.Clear
-    ws.Range("A1").Value = "áæÍÉ ÇáÊÍßã - ÇáÑÆíÓíÉ"
+    ws.Range("A1").Value = "Ù„ÙˆØ­Ø© Ø§Ù„ØªØ­ÙƒÙ… - Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©"
     ws.Range("A1").Font.Size = 18
     ws.Range("A1").Font.Bold = True
 
@@ -308,6 +323,6 @@ Public Sub Reset_Excel_Environment()
     Application.EnableEvents = True
     Application.ScreenUpdating = True
     Application.DisplayAlerts = True
-    MsgBox "? Êã ÅÚÇÏÉ ÊİÚíá Events æÅÚÏÇÏÇÊ Excel.", vbInformation
+    MsgBox "? ØªÙ… Ø¥Ø¹Ø§Ø¯Ø© ØªÙØ¹ÙŠÙ„ Events ÙˆØ¥Ø¹Ø¯Ø§Ø¯Ø§Øª Excel.", vbInformation
 End Sub
 
